@@ -7,4 +7,11 @@ class JakanBuilderError extends JakanError {
     }
 }
 
-export { JakanBuilderError };
+class JakanSettingsError extends JakanError {
+    constructor(message: string) {
+        super(message);
+        this.name = "JakanSettingsError";
+    }
+}
+
+export { JakanBuilderError, JakanSettingsError };

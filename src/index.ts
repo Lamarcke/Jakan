@@ -1,5 +1,3 @@
-import { JikanClient } from "./jakan";
-import { JikanClientBuilder, MALClientBuilder } from "./builders";
+import { Jakan } from "./jakan";
 
-export { JikanClientBuilder as JikanBuilder, MALClientBuilder as MALBuilder };
-export type { JikanClient };
+export default Jakan;
