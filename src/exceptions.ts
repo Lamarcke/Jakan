@@ -14,4 +14,11 @@ class JakanSettingsError extends JakanError {
     }
 }
 
-export { JakanBuilderError, JakanSettingsError };
+class JakanSearchError extends JakanError {
+    constructor(message: string) {
+        super(message);
+        this.name = "JakanSearchError";
+    }
+}
+
+export { JakanBuilderError, JakanSettingsError, JakanSearchError };

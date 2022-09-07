@@ -1,4 +1,4 @@
-import JakanClient from "./base";
+import JakanClient from "../base";
 
 class JakanUsers extends JakanClient {}
 

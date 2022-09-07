@@ -1,13 +1,8 @@
 import JakanClient from "./clients/base";
 import { RedisClientType } from "redis";
-
-enum MediaSearchOptions {
-    anime = "anime",
-    manga = "manga",
-    characters = "characters",
-}
-
-enum MiscSearchOptions {}
+import JakanSearch from "./clients/search/search";
+import JakanMisc from "./clients/misc/misc";
+import JakanUsers from "./clients/users/users";
 
 enum BuilderTargets {
     users = "forUsers",
@@ -15,12 +10,18 @@ enum BuilderTargets {
     misc = "forMisc",
 }
 
-type BuilderTarget = {
+type BuilderTargetObject = {
     [key: string]: boolean;
     forUsers: boolean;
     forSearch: boolean;
     forMisc: boolean;
 };
+
+type BuilderReturn<T extends JakanClient> = T extends JakanSearch
+    ? JakanSearch
+    : T extends JakanMisc
+    ? JakanMisc
+    : JakanUsers;
 
 interface JakanBuilder {
     setForUsers(forUsers: boolean): JakanBuilder;
@@ -33,8 +34,8 @@ interface JakanBuilder {
 
     setRedis(redis: RedisClientType): JakanBuilder;
 
-    build(): JakanClient;
+    build(target: string): JakanClient;
 }
 
-export { MediaSearchOptions, MiscSearchOptions, BuilderTargets };
-export type { JakanBuilder, BuilderTarget };
+export { BuilderTargets };
+export type { JakanBuilder, BuilderTargetObject, BuilderReturn };

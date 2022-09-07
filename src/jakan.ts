@@ -1,13 +1,17 @@
 import { JakanBuilderError } from "./exceptions";
 import { JakanClientBuilder } from "./builders";
-import JakanClient from "./clients/base";
 import { RedisClientType } from "redis";
 import { isNode } from "browser-or-node";
-import JakanUsers from "./clients/users";
+import JakanUsers from "./clients/users/users";
+import { BuilderReturn, BuilderTargets } from "./generalTypes";
+import JakanSearch from "./clients/search/search";
+import JakanMisc from "./clients/misc/misc";
+import JakanClient from "./clients/base";
 
 // Configures Jakan caching and returns a JakanClient.
 class Jakan {
     private builder: JakanClientBuilder;
+    private target!: BuilderTargets;
 
     constructor() {
         this.builder = new JakanClientBuilder();
@@ -18,14 +22,18 @@ class Jakan {
             this.builder.setCacheAge(cacheAge);
         }
     }
+
     // Builds the client for searching for everything related with anime, manga, characters and people.
     forSearch(): Jakan {
+        this.target = BuilderTargets.search;
         this.builder.setForSearch(true);
         return this;
     }
+
     // Builds the client for searching schedules, recommendations and
     // everything not directly related to anime/manga/characters/people search.
     forMisc(): Jakan {
+        this.target = BuilderTargets.misc;
         this.builder.setForMisc(true);
         return this;
     }
@@ -33,38 +41,47 @@ class Jakan {
     // Returns a JakanUser client directly. Won't cache requests.
     forUsers(): JakanUsers {
         this.builder.setForUsers(true);
-        return this.builder.build();
+        return this.builder.build<JakanUsers>();
     }
 
     // Builds the JakanSearchClient using a Redis as cache provider.
     //
     // Only works on Node.
-    withRedis(redisClient: RedisClientType, cacheAge?: number): JakanClient {
+    withRedis<T extends JakanClient>(
+        redisClient: RedisClientType,
+        cacheAge?: number
+    ): BuilderReturn<T> {
         if (isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setRedis(redisClient);
-            return this.builder.build();
+            return this.builder.build<T>();
         }
         throw new JakanBuilderError("Redis can only be used as cache on Node.");
     }
     // Builds a JikanClient using the localForage as the storage for request caching.
     // forageInstance is a created instance of the localforage library.
-    withForage(forageInstance: any, cacheAge?: number): JakanClient {
+    withForage<T extends JakanClient>(
+        forageInstance: any,
+        cacheAge?: number
+    ): BuilderReturn<T> {
         if (!isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setForage(forageInstance);
-            return this.builder.build();
+            return this.builder.build<T>();
         }
         throw new JakanBuilderError(
             "localForage is only available on the browser."
         );
     }
     // Builds a JikanClient using the WebStorage API as the storage for request caching.
-    withWebStorage(webStorage: Storage, cacheAge?: number): JakanClient {
+    withWebStorage<T extends JakanClient>(
+        webStorage: Storage,
+        cacheAge?: number
+    ): BuilderReturn<T> {
         if (!isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setWebStorage(webStorage);
-            return this.builder.build();
+            return this.builder.build<T>();
         }
         throw new JakanBuilderError(
             "WebStorage API is only available on the browser."
@@ -72,9 +89,9 @@ class Jakan {
     }
 
     // Builds the JakanSearchClient using the memory as storage for request caching.
-    withMemory(cacheAge?: number): JakanClient {
+    withMemory<T extends JakanClient>(cacheAge?: number): BuilderReturn<T> {
         this._setCacheAge(cacheAge);
-        return this.builder.build();
+        return this.builder.build<T>();
     }
 }
 

@@ -1,12 +1,16 @@
-import { BuilderTarget, BuilderTargets, JakanBuilder } from "./generalTypes";
+import {
+    BuilderReturn,
+    BuilderTargetObject,
+    BuilderTargets,
+    JakanBuilder,
+} from "./generalTypes";
 import { JakanBuilderError } from "./exceptions";
 import JakanClient from "./clients/base";
-import JakanSearch from "./clients/search";
-import JakanMisc from "./clients/misc";
+import JakanSearch from "./clients/search/search";
+import JakanMisc from "./clients/misc/misc";
 import { RedisClientType } from "redis";
 import { BASE_JIKAN_URL, BASE_MAL_URL } from "./constants";
-import { key } from "localforage";
-import JakanUsers from "./clients/users";
+import JakanUsers from "./clients/users/users";
 
 class JakanClientBuilder implements JakanBuilder {
     private redisClient: RedisClientType | undefined = undefined;
@@ -14,7 +18,7 @@ class JakanClientBuilder implements JakanBuilder {
     private forage: any | undefined;
     private webStorage: Storage | undefined;
     // Use BuilderTargets enum to access this object keys.
-    private builderTarget: BuilderTarget = {
+    private builderTarget: BuilderTargetObject = {
         forUsers: false,
         forMisc: false,
         forSearch: false,
@@ -73,25 +77,25 @@ class JakanClientBuilder implements JakanBuilder {
     setForage(value: any) {
         this.forage = value;
     }
-
     // Builds the JikanClient based on specified values. All clients inherit from JikanClient.
-    build(): JakanClient {
+    build<T extends JakanClient>(): BuilderReturn<T> {
         const builderTargetValues = Object.values(this.builderTarget);
         const activeValues = builderTargetValues.filter(
             (keyValue) => keyValue === true
         );
+        console.log(activeValues);
         if (activeValues.length > 1) {
             throw new JakanBuilderError("Only one client may be targeted.");
         }
 
-        if (activeValues.length > 1) {
+        if (activeValues.length > 0) {
             let instance: JakanClient;
-            const cacheOff = this.builderTarget[BuilderTargets.users];
-            if (this.builderTarget[BuilderTargets.search]) {
+            const cacheOff = this.builderTarget.forUsers;
+            if (this.builderTarget.forSearch) {
                 instance = new JakanSearch(BASE_JIKAN_URL);
-            } else if (this.builderTarget[BuilderTargets.misc]) {
+            } else if (this.builderTarget.forMisc) {
                 instance = new JakanMisc(BASE_JIKAN_URL);
-            } else if (this.builderTarget[BuilderTargets.users]) {
+            } else if (this.builderTarget.forUsers) {
                 instance = new JakanUsers(BASE_MAL_URL);
             } else {
                 throw new JakanBuilderError("No build target selected");
@@ -103,6 +107,7 @@ class JakanClientBuilder implements JakanBuilder {
                 this.forage,
                 this.webStorage
             );
+            // @ts-ignore
             return instance;
         } else {
             throw new JakanBuilderError("No media type specified.");
