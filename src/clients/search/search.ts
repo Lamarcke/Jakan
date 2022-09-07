@@ -84,7 +84,9 @@ class JakanSearch extends JakanClient {
         id: number,
         extraInfo?: string
     ): Promise<JakanIDResponse> {
-        let request = `${media}/${id}${extraInfo ?? `/${extraInfo}`}`;
+        let request = extraInfo
+            ? `${media}/${id}/${extraInfo}`
+            : `${media}/${id}`;
         return await this._makeRequest<JakanIDResponse>(request);
     }
 
