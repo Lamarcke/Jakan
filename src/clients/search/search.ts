@@ -65,6 +65,7 @@ class JakanSearch extends JakanClient {
         request: string
     ): Promise<JakanResponse<T>> {
         try {
+            console.log(request);
             const get = await this.axiosInstance.get(request);
             return get.data;
         } catch (e: any | AxiosError) {
@@ -84,9 +85,10 @@ class JakanSearch extends JakanClient {
         id: number,
         extraInfo?: string
     ): Promise<JakanIDResponse> {
-        let request = extraInfo
-            ? `${media}/${id}/${extraInfo}`
-            : `${media}/${id}`;
+        let request =
+            extraInfo != null
+                ? `${media}/${id}/${extraInfo}`
+                : `${media}/${id}`;
         return await this._makeRequest<JakanIDResponse>(request);
     }
 
