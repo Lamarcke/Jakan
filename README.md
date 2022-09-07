@@ -11,7 +11,7 @@ while using the official API for user-related requests.
 What can you expect?
 
 - All requests are cached by default in a store of your choice. 
-This, combined with Jikan own cache, means you will hardly make new unnecessary requests to MAL.  
+This, combined with Jikan own cache, means you will hardly ever make unnecessary requests to MAL.  
 `Powered by axios-cache-interceptor`
 
 
