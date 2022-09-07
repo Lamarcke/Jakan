@@ -1,6 +1,6 @@
 {
   "name": "jakan",
-  "version": "0.7.5",
+  "version": "0.8.1",
   "description": "A full-featured wrapper library that leverages the Jikan and MyAnimeList official API.",
   "source": "src/jakan.ts",
   "main": "dist/index.js",
