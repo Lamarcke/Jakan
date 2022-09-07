@@ -21,10 +21,12 @@ type BuilderReturn<T extends JakanClient> = T extends JakanSearch
     ? JakanSearch
     : T extends JakanMisc
     ? JakanMisc
-    : JakanUsers;
+    : T extends JakanUsers
+    ? JakanUsers
+    : JakanClient;
 
 interface JakanBuilder {
-    setForUsers(forUsers: boolean): JakanBuilder;
+    setForUsers(clientID: string): JakanBuilder;
 
     setForSearch(forSearch: boolean): JakanBuilder;
 

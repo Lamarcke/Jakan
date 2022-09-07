@@ -15,7 +15,6 @@ import axios, { Axios } from "axios";
 // This class is responsible for settings up the methods that create a valid axios instance.
 class JakanClient {
     private baseURL: string;
-    private isCacheOff: boolean = false;
     private cacheAge: number | undefined;
     private redisClient: RedisClientType | undefined;
     private forage: any | undefined;
@@ -84,10 +83,6 @@ class JakanClient {
 
     private _buildAxios(): void {
         const baseAxios = axios.create({ baseURL: this.baseURL });
-        if (this.isCacheOff) {
-            this.axiosInstance = baseAxios;
-            return;
-        }
         let storage: AxiosStorage;
         if (this.redisClient) {
             storage = this._buildRedisStorage();
@@ -107,20 +102,15 @@ class JakanClient {
     }
 
     settings(
-        cacheOff?: boolean,
         cacheAge?: number,
         redisClient?: RedisClientType,
         forage?: any,
         webStorage?: Storage
     ): void {
-        if (cacheOff) {
-            this.isCacheOff = true;
-        } else {
-            this.cacheAge = cacheAge;
-            this.redisClient = redisClient;
-            this.forage = forage;
-            this.webStorage = webStorage;
-        }
+        this.cacheAge = cacheAge;
+        this.redisClient = redisClient;
+        this.forage = forage;
+        this.webStorage = webStorage;
 
         this._buildAxios();
     }

@@ -11,7 +11,6 @@ import JakanClient from "./clients/base";
 // Configures Jakan caching and returns a JakanClient.
 class Jakan {
     private builder: JakanClientBuilder;
-    private target!: BuilderTargets;
 
     constructor() {
         this.builder = new JakanClientBuilder();
@@ -25,7 +24,6 @@ class Jakan {
 
     // Builds the client for searching for everything related with anime, manga, characters and people.
     forSearch(): Jakan {
-        this.target = BuilderTargets.search;
         this.builder.setForSearch(true);
         return this;
     }
@@ -33,15 +31,15 @@ class Jakan {
     // Builds the client for searching schedules, recommendations and
     // everything not directly related to anime/manga/characters/people search.
     forMisc(): Jakan {
-        this.target = BuilderTargets.misc;
         this.builder.setForMisc(true);
         return this;
     }
 
-    // Returns a JakanUser client directly. Won't cache requests.
-    forUsers(): JakanUsers {
-        this.builder.setForUsers(true);
-        return this.builder.build<JakanUsers>();
+    // Returns a JakanUsers client directly. Won't cache requests.
+    // You need to register an ClientID to use this. Please check Jakan README for more info.
+    forUsers(clientID: string): Jakan {
+        this.builder.setForUsers(clientID);
+        return this;
     }
 
     // Builds the JakanSearchClient using a Redis as cache provider.

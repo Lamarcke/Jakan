@@ -23,6 +23,7 @@ class JakanClientBuilder implements JakanBuilder {
         forMisc: false,
         forSearch: false,
     };
+    private _clientID?: string;
 
     constructor() {}
 
@@ -39,9 +40,12 @@ class JakanClientBuilder implements JakanBuilder {
         }
     }
 
-    setForUsers(forUsers: boolean): JakanClientBuilder {
-        if (forUsers) {
+    setForUsers(clientID: string): JakanClientBuilder {
+        if (clientID) {
             this._setBuilderOptions(BuilderTargets.users);
+            this._clientID = clientID;
+        } else {
+            throw new JakanBuilderError("No clientID specified.");
         }
         return this;
     }
@@ -89,19 +93,17 @@ class JakanClientBuilder implements JakanBuilder {
         }
 
         if (activeValues.length > 0) {
-            let instance: JakanClient;
-            const cacheOff = this.builderTarget.forUsers;
+            let instance: JakanUsers | JakanSearch | JakanMisc;
             if (this.builderTarget.forSearch) {
                 instance = new JakanSearch(BASE_JIKAN_URL);
             } else if (this.builderTarget.forMisc) {
-                instance = new JakanMisc(BASE_JIKAN_URL);
-            } else if (this.builderTarget.forUsers) {
-                instance = new JakanUsers(BASE_MAL_URL);
+                instance = new JakanMisc(BASE_JIKAN_URL, "");
+            } else if (this.builderTarget.forUsers && this._clientID) {
+                instance = new JakanUsers(BASE_MAL_URL, this._clientID);
             } else {
                 throw new JakanBuilderError("No build target selected");
             }
             instance.settings(
-                cacheOff,
                 this.cacheAge,
                 this.redisClient,
                 this.forage,
