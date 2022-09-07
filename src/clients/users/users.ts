@@ -38,8 +38,11 @@ class JakanUsers extends JakanClient {
     // Retrieves the public manga list of a specified user.
     // Next is an url specified by MAL that represents the next page in this user's manga list.
 
-    async userManga(username: string): Promise<JakanUsersResponse> {
-        const request = `users/${username}/mangalist`;
+    async userManga(
+        username: string,
+        next?: string
+    ): Promise<JakanUsersResponse> {
+        const request = next ? next : `users/${username}/animelist`;
         try {
             const get = await this.axiosInstance.get<JakanUsersResponse>(
                 request,
