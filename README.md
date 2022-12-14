@@ -2,7 +2,7 @@
 The de-facto wrapper for the Jikan and MyAnimeList API.
 
 ## What's this?
-Jakan is a wrapper on top of Jikan (a MAL unnoficial API) and the official MAL api.  
+Jakan is a wrapper on top of Jikan **v4** (a MAL unnoficial API) and the official MAL api.  
 
 We plan to leverage Jikan api for most of the requests (searching, schedules, recommendations and etc) 
 while using the official API for user-related requests.
@@ -11,7 +11,7 @@ while using the official API for user-related requests.
 What can you expect?
 
 - All requests are cached by default in a store of your choice. 
-This, combined with Jikan own cache, means you will hardly ever make unnecessary requests to MAL.  
+This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to MAL.  
 `Powered by axios-cache-interceptor`
 
 
@@ -21,7 +21,7 @@ This, combined with Jikan own cache, means you will hardly ever make unnecessary
 - Typescript first
 Typescript is a first citizen here, and almost all request endpoints and their parameters 
 (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
-Results are also mapped, this means that will know ahead what to expect from a method result.  
+Results are also mapped, this means that you know what values are in a result.  
 
 
 - As simple as it gets
@@ -35,7 +35,7 @@ or
 ## Usage
 
 Jakan uses a builder-pattern approach to building it's clients.  
-As the end user, the only class you should be using for creating new instances is the main one (that acts as a Director).  
+As the end user, the only class you should be using for creating new instances is the main one (named `Jakan`).  
 We include three clients for requests:  
 
 
@@ -44,7 +44,8 @@ We include three clients for requests:
 `JakanUsers` - The client responsible for leveraging MAL. Authenticates, retrieves and changes a user's library.  
 
 Choosing a client is simple, just use the respective `.for'Client'()` (where `'Client'` is the client name.) method on Jakan.  
-Then choose a cache provider. You can just use memory or the WebStorage API for a quickstart.
+Then, choose a cache provider. You can use a memory cache or the WebStorage API for a quickstart.
+
 ```typescript
 import {Jakan} from "jakan";
 const jakan = new Jakan().forSearch().withMemory()
@@ -56,20 +57,20 @@ jakan.manga("Sono bisque").then(...)
 // With ids
 jakan.anime(1)
 // With extra info attached
-// PS: extraInfo (second parameter) is an enum, you may know the available values by pressing CTRL + Space or equivalent.
+// PS: extraInfo (second parameter) is an enum, you may know the available values by pressing CMD + Space (show auto-complete) in your editor.
 jakan.anime(1, "characters")
 // etc...
 ```
 
 ### Where are my types?
 We export types for Clients and request building for your usage.  
-You don't actually need to import these types, you can just trust your IDE, and it will autocomplete and suggest values for you.  
+You don't actually need to import these types, you can just trust your editor, and it will autocomplete and suggest values for you.  
 e.g.:
 
 ```typescript
 import {MangaSearchParameters, AnimeSearchParameters} from "jakan";
 
-// You can preview the available values in fields marked as enum by pressing CTRL + SPACE (or equivalent) in your IDE
+// You can preview the available values in fields marked as enum by pressing CTRL + SPACE (or equivalent) in your editor.
 const myQuery: MangaSearchParameters = {
     q: "Solo Leveling",  // q stands for Query and is the only non-optional value.
     type: "manwha", // Type is an enum.
@@ -85,7 +86,8 @@ Note: all enums are exported as types, so you may only use their values as refer
 you will get the available values.
 
 ### Project status
-This library is not finished yet. We are mapping all endpoints manually, so it takes some time.
+This library is not finished yet. We are mapping all endpoints manually, so it takes some time.  
+PRs are very welcome.
 
 ## Clients
 - [x] JakanSearch
@@ -122,8 +124,7 @@ Post, put and delete requests require OAuth2 authentication, they will use your 
 You also need to provide an PCKE challenge (which could be done in this library, it's actually very simple), and the list goes on...  
 
 
-There's a lot of secrets envolved (as in secret strings that you need to use for auth), and it's just too much for a simple wrapper library.
-
+There's a lot of secrets involved (as in secret strings that you need to use for auth), and it's just too much for a simple wrapper library.
 
 While my original plan was to actually implement authentication and post requests, i feel that this library would just get on the way of the
 custom code a user would need to implement anyway (you need at least a hosted API/frontend for auth to work).  
