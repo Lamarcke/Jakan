@@ -65,7 +65,6 @@ class JakanSearch extends JakanClient {
         request: string
     ): Promise<JakanResponse<T>> {
         try {
-            console.log(request);
             const get = await this.axiosInstance.get(request);
             return get.data;
         } catch (e: any | AxiosError) {

@@ -87,7 +87,6 @@ class JakanClientBuilder implements JakanBuilder {
         const activeValues = builderTargetValues.filter(
             (keyValue) => keyValue === true
         );
-        console.log(activeValues);
         if (activeValues.length > 1) {
             throw new JakanBuilderError("Only one client may be targeted.");
         }
