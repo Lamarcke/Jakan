@@ -1,11 +1,9 @@
 import JakanClient from "../base";
 
 class JakanMisc extends JakanClient {
-    private readonly teste: string;
 
-    constructor(baseURL: string, teste: string) {
+    constructor(baseURL: string,) {
         super(baseURL);
-        this.teste = teste;
     }
 }
 

@@ -1,12 +1,12 @@
-import { JakanBuilderError } from "./exceptions";
-import { JakanClientBuilder } from "./builders";
-import { RedisClientType } from "redis";
 import { isNode } from "browser-or-node";
-import JakanUsers from "./clients/users/users";
-import { BuilderReturn, BuilderTargets } from "./generalTypes";
-import JakanSearch from "./clients/search/search";
-import JakanMisc from "./clients/misc/misc";
+import { RedisClientType } from "redis";
+import { JakanClientBuilder } from "./builders";
 import JakanClient from "./clients/base";
+import JakanMisc from "./clients/misc/misc";
+import JakanSearch from "./clients/search/search";
+import JakanUsers from "./clients/users/users";
+import { JakanBuilderError } from "./exceptions";
+import { BuilderReturn, BuilderTargets } from "./generalTypes";
 
 // Configures Jakan caching and returns a JakanClient.
 class Jakan {
@@ -22,64 +22,68 @@ class Jakan {
         }
     }
 
+
+
+
     // Builds the client for searching for everything related with anime, manga, characters and people.
-    forSearch(): Jakan {
-        this.builder.setForSearch(true);
-        return this;
+    forSearch(): JakanSearch {
+        this.builder.setForSearch()
+        return this.builder.build<JakanSearch>();
     }
 
     // Builds the client for searching schedules, recommendations and
     // everything not directly related to anime/manga/characters/people search.
-    forMisc(): Jakan {
-        this.builder.setForMisc(true);
+    forMisc(): JakanMisc {
+        this.builderTarget = BuilderTargets.misc
         return this;
     }
 
-    // Returns a JakanUsers client directly. Won't cache requests.
+    // Returns a JakanUsers client. Won't cache requests.
     // You need to register an ClientID to use this. Please check Jakan README for more info.
-    forUsers(clientID: string): Jakan {
-        this.builder.setForUsers(clientID);
+    forUsers(clientID: string): JakanUsers {
+        this.builderTarget = BuilderTargets.users
         return this;
     }
 
     // Builds the JakanSearchClient using a Redis as cache provider.
     //
     // Only works on Node.
-    withRedis<T extends JakanClient>(
+    withRedis(
         redisClient: RedisClientType,
         cacheAge?: number
-    ): BuilderReturn<T> {
+    ): Jakan {
         if (isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setRedis(redisClient);
-            return this.builder.build<T>();
+            return this
         }
         throw new JakanBuilderError("Redis can only be used as cache on Node.");
     }
     // Builds a JikanClient using the localForage as the storage for request caching.
     // forageInstance is a created instance of the localforage library.
-    withForage<T extends JakanClient>(
+    withForage(
         forageInstance: any,
         cacheAge?: number
-    ): BuilderReturn<T> {
+    ): Jakan {
         if (!isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setForage(forageInstance);
-            return this.builder.build<T>();
+            return this
         }
+
         throw new JakanBuilderError(
             "localForage is only available on the browser."
         );
     }
     // Builds a JikanClient using the WebStorage API as the storage for request caching.
-    withWebStorage<T extends JakanClient>(
+    withWebStorage(
         webStorage: Storage,
         cacheAge?: number
-    ): BuilderReturn<T> {
+    ): Jakan {
         if (!isNode) {
             this._setCacheAge(cacheAge);
             this.builder.setWebStorage(webStorage);
-            return this.builder.build<T>();
+            return this
         }
         throw new JakanBuilderError(
             "WebStorage API is only available on the browser."
@@ -87,9 +91,9 @@ class Jakan {
     }
 
     // Builds the JakanSearchClient using the memory as storage for request caching.
-    withMemory<T extends JakanClient>(cacheAge?: number): BuilderReturn<T> {
+    withMemory(cacheAge?: number): Jakan {
         this._setCacheAge(cacheAge);
-        return this.builder.build<T>();
+        return this
     }
 }
 

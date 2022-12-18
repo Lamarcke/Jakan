@@ -18,31 +18,17 @@ class JakanClientBuilder implements JakanBuilder {
     private forage: any | undefined;
     private webStorage: Storage | undefined;
     // Use BuilderTargets enum to access this object keys.
-    private builderTarget: BuilderTargetObject = {
-        forUsers: false,
-        forMisc: false,
-        forSearch: false,
-    };
+    private builderTarget: BuilderTargets
     private _clientID?: string;
 
-    constructor() {}
-
-    private _setBuilderOptions(valueName: BuilderTargets) {
-        if (valueName) {
-            // This iterates through the builderOptions and sets
-            Object.keys(this.builderTarget).forEach((key) => {
-                if (key === valueName) {
-                    this.builderTarget[valueName] = true;
-                } else {
-                    this.builderTarget[key] = false;
-                }
-            });
-        }
+    constructor() {
+        this.builderTarget = BuilderTargets.undefined
     }
+
 
     setForUsers(clientID: string): JakanClientBuilder {
         if (clientID) {
-            this._setBuilderOptions(BuilderTargets.users);
+            this.builderTarget = BuilderTargets.users;
             this._clientID = clientID;
         } else {
             throw new JakanBuilderError("No clientID specified.");
@@ -50,17 +36,13 @@ class JakanClientBuilder implements JakanBuilder {
         return this;
     }
 
-    setForSearch(forSearch: boolean): JakanClientBuilder {
-        if (forSearch) {
-            this._setBuilderOptions(BuilderTargets.search);
-        }
+    setForSearch(): JakanClientBuilder {
+        this.builderTarget = BuilderTargets.search;
         return this;
     }
 
-    setForMisc(forMisc: boolean): JakanClientBuilder {
-        if (forMisc) {
-            this._setBuilderOptions(BuilderTargets.misc);
-        }
+    setForMisc(): JakanClientBuilder {
+        this.builderTarget = BuilderTargets.misc;
         return this;
     }
 
@@ -81,38 +63,39 @@ class JakanClientBuilder implements JakanBuilder {
     setForage(value: any) {
         this.forage = value;
     }
+
     // Builds the JikanClient based on specified values. All clients inherit from JikanClient.
     build<T extends JakanClient>(): BuilderReturn<T> {
-        const builderTargetValues = Object.values(this.builderTarget);
-        const activeValues = builderTargetValues.filter(
-            (keyValue) => keyValue === true
-        );
-        if (activeValues.length > 1) {
-            throw new JakanBuilderError("Only one client may be targeted.");
+
+        let instance: JakanClient;
+
+        if (this.builderTarget === BuilderTargets.search) {
+            instance = new JakanSearch(BASE_JIKAN_URL);
+
+        } else if (this.builderTarget === BuilderTargets.misc) {
+            instance = new JakanMisc(BASE_JIKAN_URL);
+
+        } else if (this.builderTarget === BuilderTargets.users) {
+            if (this._clientID == undefined) {
+                throw new JakanBuilderError("No clientID specified.");
+            }
+            instance = new JakanUsers(BASE_MAL_URL, this._clientID);
+
+        } else {
+            throw new JakanBuilderError("No build target selected");
         }
 
-        if (activeValues.length > 0) {
-            let instance: JakanUsers | JakanSearch | JakanMisc;
-            if (this.builderTarget.forSearch) {
-                instance = new JakanSearch(BASE_JIKAN_URL);
-            } else if (this.builderTarget.forMisc) {
-                instance = new JakanMisc(BASE_JIKAN_URL, "");
-            } else if (this.builderTarget.forUsers && this._clientID) {
-                instance = new JakanUsers(BASE_MAL_URL, this._clientID);
-            } else {
-                throw new JakanBuilderError("No build target selected");
-            }
-            instance.settings(
-                this.cacheAge,
-                this.redisClient,
-                this.forage,
-                this.webStorage
-            );
-            // @ts-ignore
-            return instance;
-        } else {
-            throw new JakanBuilderError("No media type specified.");
-        }
+        instance.settings(
+            this.cacheAge,
+            this.redisClient,
+            this.forage,
+            this.webStorage
+        );
+
+        // @ts-ignore
+        return instance
+
+
     }
 }
 

@@ -8,14 +8,9 @@ enum BuilderTargets {
     users = "forUsers",
     search = "forSearch",
     misc = "forMisc",
+    undefined = "undefined"
 }
 
-type BuilderTargetObject = {
-    [key: string]: boolean;
-    forUsers: boolean;
-    forSearch: boolean;
-    forMisc: boolean;
-};
 
 type BuilderReturn<T extends JakanClient> = T extends JakanSearch
     ? JakanSearch
@@ -40,4 +35,4 @@ interface JakanBuilder {
 }
 
 export { BuilderTargets };
-export type { JakanBuilder, BuilderTargetObject, BuilderReturn };
+export type { JakanBuilder, BuilderReturn };
