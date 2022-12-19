@@ -32,7 +32,29 @@ We use axios under the hood. All methods are async by default. No expensive calc
 or  
 `yarn add jakan`
 
+## THE 1.0.0 UPDATE
+Starting from version `1.0`, a small change will happen on how the builder process for the Jakan class is done. The change is pretty simple:  
+We will be inverting the order of methods to call in the builder class, the new order is as follow:  
+`choosing cache provider --> choosing media type`  
+instead of:  
+`choosing media type --> choosing cache provider`  
+
+The main reason for this change is described in this [issue](https://github.com/Lamarcke/Jakan/issues/2).
+
+When this happens, this README will be updated acorddingly, you can be sure that the code present in the quickstart guides below are the correct way.
+
+If you have a service built on top of this project, and don't want to update now, you can pin the `0.9` branch from this repo. In your `package.json` file:  
+```json
+"dependencies": {
+    "jakan": "Lamarcke/Jakan#0.9"
+  },
+```
+
+This change will only happen when the `1.0` version is out in the `npm` registry.
+
 ## Usage
+
+
 
 Jakan uses a builder-pattern approach to building it's clients.  
 As the end user, the only class you should be using for creating new instances is the main one (named `Jakan`).  
@@ -84,6 +106,20 @@ jakan.anime(myQuery).then()
 
 Note: all enums are exported as types, so you may only use their values as reference. Again, just press CTRL + Space and 
 you will get the available values.
+
+If you editor is not recognizing the type of client you are building, simply import it's type and use it as a type parameter in the respective `withXXXX` method.  
+e.g.:  
+
+```typescript
+import { Jakan, JakanSearch } from "jakan"
+
+const jakan = Jakan().forSearch().withMemory<JakanSearch>()
+```
+
+This will make the editor/typescript language server understand that you are building a `JakanSearch` client.  
+You can also import and use `JakanMisc` and `JakanUsers`.
+
+**PS**: This should only happen in versions prior to `1.0`. Make sure the build methods are being called in the correct order if you are on latter versions.   
 
 ### Project status
 This library is not finished yet. We are mapping all endpoints manually, so it takes some time.  
