@@ -1,9 +1,4 @@
-import {
-    BuilderReturn,
-    BuilderTargetObject,
-    BuilderTargets,
-    JakanBuilder,
-} from "./generalTypes";
+import { BuilderReturn, BuilderTargets, JakanBuilder } from "./generalTypes";
 import { JakanBuilderError } from "./exceptions";
 import JakanClient from "./clients/base";
 import JakanSearch from "./clients/search/search";
@@ -18,13 +13,12 @@ class JakanClientBuilder implements JakanBuilder {
     private forage: any | undefined;
     private webStorage: Storage | undefined;
     // Use BuilderTargets enum to access this object keys.
-    private builderTarget: BuilderTargets
+    private builderTarget: BuilderTargets;
     private _clientID?: string;
 
     constructor() {
-        this.builderTarget = BuilderTargets.undefined
+        this.builderTarget = BuilderTargets.undefined;
     }
-
 
     setForUsers(clientID: string): JakanClientBuilder {
         if (clientID) {
@@ -66,26 +60,22 @@ class JakanClientBuilder implements JakanBuilder {
 
     // Builds the JikanClient based on specified values. All clients inherit from JikanClient.
     build<T extends JakanClient>(): BuilderReturn<T> {
-
         let instance: JakanClient;
 
         if (this.builderTarget === BuilderTargets.search) {
             instance = new JakanSearch(BASE_JIKAN_URL);
-
         } else if (this.builderTarget === BuilderTargets.misc) {
             instance = new JakanMisc(BASE_JIKAN_URL);
-
         } else if (this.builderTarget === BuilderTargets.users) {
             if (this._clientID == undefined) {
                 throw new JakanBuilderError("No clientID specified.");
             }
             instance = new JakanUsers(BASE_MAL_URL, this._clientID);
-
         } else {
             throw new JakanBuilderError("No build target selected");
         }
 
-        instance.settings(
+        instance.defineSettings(
             this.cacheAge,
             this.redisClient,
             this.forage,
@@ -93,9 +83,7 @@ class JakanClientBuilder implements JakanBuilder {
         );
 
         // @ts-ignore
-        return instance
-
-
+        return instance;
     }
 }
 

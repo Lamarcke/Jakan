@@ -51,6 +51,7 @@ class JakanClient {
         }
         throw new JakanSettingsError("No redis client specified.");
     }
+
     // Builds the AxioStorage to be used by caching in axios-cache-interceptor using localForage.
     private _buildForageStorage() {
         if (!isBrowser) {
@@ -101,7 +102,7 @@ class JakanClient {
         this.baseURL = url;
     }
 
-    settings(
+    defineSettings(
         cacheAge?: number,
         redisClient?: RedisClientType,
         forage?: any,
@@ -111,7 +112,7 @@ class JakanClient {
         this.redisClient = redisClient;
         this.forage = forage;
         this.webStorage = webStorage;
-
+        // Rebuilds the axios instance with the new settings.
         this._buildAxios();
     }
 }

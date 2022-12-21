@@ -8,9 +8,8 @@ enum BuilderTargets {
     users = "forUsers",
     search = "forSearch",
     misc = "forMisc",
-    undefined = "undefined"
+    undefined = "undefined",
 }
-
 
 type BuilderReturn<T extends JakanClient> = T extends JakanSearch
     ? JakanSearch
