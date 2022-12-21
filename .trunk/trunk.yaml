@@ -18,10 +18,8 @@ runtimes:
         - go@1.18.3
         - node@16.14.2
 actions:
-    disabled:
-      - trunk-announce
-        - trunk-check-pre-push
-        - trunk-fmt-pre-commit
-
     enabled:
         - trunk-upgrade-available
+        - trunk-announce
+        - trunk-check-pre-push
+        - trunk-fmt-pre-commit
