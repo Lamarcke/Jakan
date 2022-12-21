@@ -192,10 +192,7 @@ type SearchExtraInfoType =
     | ExtraCharactersInfo
     | ExtraPeopleInfo;
 
-
-export {
-    RequestMediaOptions,
-}
+export { RequestMediaOptions };
 
 export type {
     

@@ -7,7 +7,12 @@ import JakanUsers from "./clients/users/users";
 import { JakanBuilderError } from "./exceptions";
 import { BuilderTargets } from "./generalTypes";
 
-// Configures Jakan caching and returns a JakanClient.
+/*
+ * Jakan is the main class of the library.
+ * It allows users to easily build a JakanClient.
+ * It's also used to specify the cache provider.
+ * If no cache provider is specified, defaults to memory.
+ */
 class Jakan {
     private builder: JakanClientBuilder;
 
@@ -24,14 +29,10 @@ class Jakan {
         }
     }
 
-    // Builds the client for searching for everything related with anime, manga, characters and people.
     forSearch(): JakanSearch {
         this.builder.setForSearch();
         return this.builder.build<JakanSearch>();
     }
-
-    // Builds the client for searching schedules, recommendations and
-    // everything not directly related to anime/manga/characters/people search.
     forMisc(): JakanMisc {
         this.builder.setForMisc();
         return this.builder.build<JakanMisc>();
@@ -81,7 +82,12 @@ class Jakan {
         );
     }
 
-    // Builds the JakanSearchClient using the memory as storage for request caching.
+    /**
+     * Builds the JakanSearchClient using the memory as storage for request caching.
+     *
+     * @param {number} [cacheAge] - The age of the cache in milliseconds.
+     * @returns The instance of the class.
+     */
     withMemory(cacheAge?: number): Jakan {
         this._setCacheAge(cacheAge);
         return this;

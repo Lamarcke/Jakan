@@ -13,18 +13,18 @@ while using the official API for user-related requests.
 
 What can you expect?
 
--   All requests are cached by default in a store of your choice.
+-   All requests are cached by default in a store of your choice.  
     This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to MAL.  
     `Powered by axios-cache-interceptor`
 
 -   Platform-agnostic: Built to work with Node and on the browser.
 
--   Typescript first
+-   Typescript first  
     Typescript is a first citizen here, and almost all request endpoints and their parameters
     (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
-    Results are also mapped, this means that you know what values are in a result.
+    Results are also mapped.
 
--   As simple as it gets
+-   As simple as it gets  
     We use axios under the hood. All methods are async by default. No expensive calculations, no unnecessary dependencies.
 
 ## Installation
@@ -134,16 +134,23 @@ PRs are very welcome.
 
 ### JakanSearch
 
+Client for search related requests.
+
 -   [x] Anime
 -   [x] Manga
--   [ ] Characters
--   [ ] People
+-   [x] Characters
+-   [x] People
 
 ### JakanMisc
+
+Client for everything not search-related. Like recommendations, top, etc.
 
 To be implemented.
 
 ### JakanUsers
+
+Client for interacting with MAL's public user endpoints.
+Only public endpoints may be used.
 
 -   [x] User anime list
 -   [x] User manga list
