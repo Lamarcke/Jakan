@@ -1,14 +1,20 @@
 import JakanClient from "../base";
 import {
     AnimeSearchParameters,
+    CharacterSearchParameters,
+    PeopleSearchParameters,
     ExtraAnimeInfo,
     ExtraMangaInfo,
     MangaSearchParameters,
+    SearchRequestType,
+    SearchExtraInfoType,
+    ExtraCharactersInfo,
+    RequestMediaOptions,
+    ExtraPeopleInfo,
 } from "./searchTypes";
 import { ExtraInfo, JakanResponse, QueryOrId } from "./searchBases";
 import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 import { JakanSearchError } from "../../exceptions";
-import { AxiosError } from "axios";
 
 class JakanSearch extends JakanClient {
     anime(id: number, extraInfo: ExtraAnimeInfo): Promise<JakanIDResponse>;
@@ -23,10 +29,10 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             AnimeSearchParameters,
             ExtraAnimeInfo
-        >("anime", queryOrId, extraInfo);
+        >(RequestMediaOptions.anime, queryOrId, extraInfo);
     }
 
-    manga(id: number, extraInfo: string): Promise<JakanIDResponse>;
+    manga(id: number, extraInfo: ExtraMangaInfo): Promise<JakanIDResponse>;
     manga(query: MangaSearchParameters): Promise<JakanQueryResponse>;
     manga(id: number): Promise<JakanIDResponse>;
     manga(query: string): Promise<JakanQueryResponse>;
@@ -38,12 +44,43 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             MangaSearchParameters,
             ExtraMangaInfo
-        >("manga", queryOrId, extraInfo);
+        >(RequestMediaOptions.manga, queryOrId, extraInfo);
+    }
+
+    characters(
+        id: number,
+        extraInfo: ExtraCharactersInfo
+    ): Promise<JakanIDResponse>;
+    characters(query: CharacterSearchParameters): Promise<JakanQueryResponse>;
+    characters(id: number): Promise<JakanIDResponse>;
+    characters(query: string): Promise<JakanQueryResponse>;
+    async characters(
+        queryOrId: QueryOrId<CharacterSearchParameters>,
+        extraInfo?: ExtraCharactersInfo
+    ): Promise<JakanQueryResponse | JakanIDResponse> {
+        return await this._prepareRequest<
+            CharacterSearchParameters,
+            ExtraCharactersInfo
+        >(RequestMediaOptions.characters, queryOrId, extraInfo);
+    }
+
+    people(id: number, extraInfo: ExtraPeopleInfo): Promise<JakanIDResponse>;
+    people(query: PeopleSearchParameters): Promise<JakanQueryResponse>;
+    people(id: number): Promise<JakanIDResponse>;
+    people(query: string): Promise<JakanQueryResponse>;
+    async people(
+        queryOrId: QueryOrId<PeopleSearchParameters>,
+        extraInfo?: ExtraPeopleInfo
+    ): Promise<JakanQueryResponse | JakanIDResponse> {
+        return await this._prepareRequest<
+            PeopleSearchParameters,
+            ExtraPeopleInfo
+        >(RequestMediaOptions.people, queryOrId, extraInfo);
     }
 
     private async _prepareRequest<
-        T extends AnimeSearchParameters | MangaSearchParameters,
-        E extends ExtraAnimeInfo | ExtraMangaInfo
+        T extends SearchRequestType,
+        E extends SearchExtraInfoType
     >(
         media: string,
         queryOrId: QueryOrId<T>,
@@ -67,8 +104,9 @@ class JakanSearch extends JakanClient {
         try {
             const get = await this.axiosInstance.get(request);
             return get.data;
-        } catch (e: any | AxiosError) {
-            console.error(e);
+
+            // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
+        } catch (e: any) {
             if (e.response) {
                 throw new JakanSearchError(e.response);
             } else {
@@ -84,7 +122,7 @@ class JakanSearch extends JakanClient {
         id: number,
         extraInfo?: string
     ): Promise<JakanIDResponse> {
-        let request =
+        const request =
             extraInfo != null
                 ? `${media}/${id}/${extraInfo}`
                 : `${media}/${id}`;
@@ -95,7 +133,7 @@ class JakanSearch extends JakanClient {
         media: string,
         query: AnimeSearchParameters | MangaSearchParameters
     ): string {
-        let request: string = `${media}?`;
+        let request = `${media}?`;
         Object.entries(query).forEach(([key, value], index) => {
             const toAppendToRequest =
                 index === 0 ? `${key}=${value}` : `&${key}=${value}`;

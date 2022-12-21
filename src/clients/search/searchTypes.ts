@@ -1,9 +1,16 @@
+enum RequestMediaOptions {
+    anime = "anime",
+    manga = "manga",
+    characters = "characters",
+    people = "people",
+}
+
 enum SortOptions {
     asc = "asc",
     desc = "desc",
 }
 
-enum BaseSearchOrder {
+enum BaseMediaSearchOrder {
     malId = "mal_id",
     title = "title",
     startDate = "start_date",
@@ -14,6 +21,19 @@ enum BaseSearchOrder {
     popularity = "popularity",
     members = "members",
     favorites = "favorites",
+}
+
+enum CharactersSearchOrder {
+    malId = "mal_id",
+    name = "name",
+    favorites = "favorites",
+}
+
+enum PeopleSearchOrder {
+    malId = "mal_id",
+    name = "name",
+    favorites = "favorites",
+    birthday = "birthday",
 }
 
 enum AnimeSearchOrder {
@@ -69,7 +89,8 @@ enum AnimeMediaTypes {
     music = "music",
 }
 
-interface JakanSearchParameters {
+// Some parameters are common to both manga and anime, so we define them here.
+interface JakanMediaSearchParameters {
     q: string;
     page?: number;
     limit?: number;
@@ -86,20 +107,36 @@ interface JakanSearchParameters {
     end_date?: string;
 }
 
+interface JakanMiscSearchParameters {
+    q: string;
+    page?: number;
+    limit?: number;
+    sort?: SortOptions | string;
+    letter?: string;
+}
+
+interface CharacterSearchParameters extends JakanMiscSearchParameters {
+    order_by?: CharactersSearchOrder | string;
+}
+
+interface PeopleSearchParameters extends JakanMiscSearchParameters {
+    order_by?: PeopleSearchOrder | string;
+}
+
 // Be sure to check Jikan docs.
-interface MangaSearchParameters extends JakanSearchParameters {
+interface MangaSearchParameters extends JakanMediaSearchParameters {
     type?: MangaMediaTypes | string;
     status?: MangaStatus | string;
-    order_by?: MangaSearchOrder | BaseSearchOrder | string;
+    order_by?: MangaSearchOrder | BaseMediaSearchOrder | string;
     magazines?: string;
 }
 
 // Be sure to check Jikan docs.
-interface AnimeSearchParameters extends JakanSearchParameters {
+interface AnimeSearchParameters extends JakanMediaSearchParameters {
     type?: AnimeMediaTypes | string;
     status?: AnimeStatus | string;
     rating?: AnimeRating | string;
-    order_by?: AnimeSearchOrder | BaseSearchOrder | string;
+    order_by?: AnimeSearchOrder | BaseMediaSearchOrder | string;
 }
 
 // Common for both anime and manga.
@@ -130,13 +167,46 @@ enum ExtraMangaInfoBase {
     topics = "topics",
 }
 
+enum ExtraMiscInfoBase {
+    full = "full",
+    voice = "voice",
+    anime = "anime",
+    manga = "manga",
+    pictures = "pictures",
+}
+
 type ExtraAnimeInfo = ExtraInfoBase | ExtraAnimeInfoBase | string;
 type ExtraMangaInfo = ExtraInfoBase | ExtraMangaInfoBase | string;
+type ExtraCharactersInfo = ExtraMiscInfoBase | string;
+type ExtraPeopleInfo = ExtraMiscInfoBase | string;
+
+type SearchRequestType =
+    | AnimeSearchParameters
+    | MangaSearchParameters
+    | CharacterSearchParameters
+    | PeopleSearchParameters;
+
+type SearchExtraInfoType =
+    | ExtraAnimeInfo
+    | ExtraMangaInfo
+    | ExtraCharactersInfo
+    | ExtraPeopleInfo;
+
+
+export {
+    RequestMediaOptions,
+}
 
 export type {
+    
+    SearchRequestType,
+    SearchExtraInfoType,
     AnimeSearchParameters,
     MangaSearchParameters,
-    JakanSearchParameters,
+    CharacterSearchParameters,
+    PeopleSearchParameters,
     ExtraAnimeInfo,
     ExtraMangaInfo,
+    ExtraCharactersInfo,
+    ExtraPeopleInfo,
 };

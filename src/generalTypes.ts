@@ -1,8 +1,5 @@
 import JakanClient from "./clients/base";
 import { RedisClientType } from "redis";
-import JakanSearch from "./clients/search/search";
-import JakanMisc from "./clients/misc/misc";
-import JakanUsers from "./clients/users/users";
 
 enum BuilderTargets {
     users = "forUsers",
@@ -11,12 +8,8 @@ enum BuilderTargets {
     undefined = "undefined",
 }
 
-type BuilderReturn<T extends JakanClient> = T extends JakanSearch
-    ? JakanSearch
-    : T extends JakanMisc
-    ? JakanMisc
-    : T extends JakanUsers
-    ? JakanUsers
+type BuilderReturn<T extends JakanClient> = T extends JakanClient
+    ? T
     : JakanClient;
 
 interface JakanBuilder {

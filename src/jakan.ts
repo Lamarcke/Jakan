@@ -13,6 +13,9 @@ class Jakan {
 
     constructor() {
         this.builder = new JakanClientBuilder();
+        // Allows users to easily use the memory cache.
+        // Makes calling "withMemory" optional.
+        this._setCacheAge();
     }
 
     private _setCacheAge(cacheAge?: number) {
@@ -52,8 +55,9 @@ class Jakan {
         }
         throw new JakanBuilderError("Redis can only be used as cache on Node.");
     }
-    // Builds a JikanClient using the localForage as the storage for request caching.
-    // forageInstance is a created instance of the localforage library.
+    // Builds a JikanClient using the localforage library as the storage for request caching.
+    // forageInstance refers to a created instance of the localforage library.
+    // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
     withForage(forageInstance: any, cacheAge?: number): Jakan {
         if (!isNode) {
             this._setCacheAge(cacheAge);

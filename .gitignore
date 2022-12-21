@@ -191,4 +191,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-test.ts
+src/test.ts

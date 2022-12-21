@@ -2,15 +2,12 @@ import {
     AnimeSearchParameters,
     ExtraAnimeInfo,
     ExtraMangaInfo,
-    JakanSearchParameters,
     MangaSearchParameters,
+    SearchRequestType,
 } from "./searchTypes";
 import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 
-type QueryOrId<T extends AnimeSearchParameters | MangaSearchParameters> =
-    | number
-    | string
-    | T;
+type QueryOrId<T extends SearchRequestType> = number | string | T;
 
 type ExtraInfo<T extends ExtraAnimeInfo | ExtraMangaInfo> = T;
 
