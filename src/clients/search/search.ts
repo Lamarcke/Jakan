@@ -1,20 +1,22 @@
 import JakanClient from "../base";
 import {
+    QueryOrId,
     AnimeSearchParameters,
     CharacterSearchParameters,
     PeopleSearchParameters,
     ExtraAnimeInfo,
     ExtraMangaInfo,
     MangaSearchParameters,
-    SearchRequestType,
-    SearchExtraInfoType,
+    SearchRequestParameters,
+    SearchRequestExtraInfo,
     ExtraCharactersInfo,
-    RequestMediaOptions,
     ExtraPeopleInfo,
+    JakanResponse,
+    ExtraInfo,
 } from "./searchTypes";
-import { ExtraInfo, JakanResponse, QueryOrId } from "./searchBases";
 import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 import { JakanSearchError } from "../../exceptions";
+import { RequestMediaOptions } from "./searchConstants";
 
 class JakanSearch extends JakanClient {
     anime(id: number, extraInfo: ExtraAnimeInfo): Promise<JakanIDResponse>;
@@ -79,8 +81,8 @@ class JakanSearch extends JakanClient {
     }
 
     private async _prepareRequest<
-        T extends SearchRequestType,
-        E extends SearchExtraInfoType
+        T extends SearchRequestParameters,
+        E extends SearchRequestExtraInfo
     >(
         media: string,
         queryOrId: QueryOrId<T>,
@@ -107,6 +109,7 @@ class JakanSearch extends JakanClient {
 
             // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
         } catch (e: any) {
+            // @eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (e.response) {
                 throw new JakanSearchError(e.response);
             } else {
@@ -131,27 +134,26 @@ class JakanSearch extends JakanClient {
 
     private _queryRequestBuilder(
         media: string,
-        query: AnimeSearchParameters | MangaSearchParameters
+        query: SearchRequestParameters
     ): string {
         let request = `${media}?`;
-        Object.entries(query).forEach(([key, value], index) => {
-            const toAppendToRequest =
-                index === 0 ? `${key}=${value}` : `&${key}=${value}`;
-            request = request + toAppendToRequest;
-        });
+        if (typeof query === "object") {
+            Object.entries(query).forEach(([key, value], index) => {
+                const toAppendToRequest =
+                    index === 0 ? `${key}=${value}` : `&${key}=${value}`;
+                request = request + toAppendToRequest;
+            });
+        } else {
+            request = request + `q=${query}`;
+        }
         return request;
     }
 
     private async _withQuery(
         media: string,
-        query: string | AnimeSearchParameters | MangaSearchParameters
+        query: SearchRequestParameters
     ): Promise<JakanQueryResponse> {
-        let request: string;
-        if (typeof query === "object") {
-            request = this._queryRequestBuilder(media, query);
-        } else {
-            request = `${media}?q=${query}`;
-        }
+        const request = this._queryRequestBuilder(media, query);
         return await this._makeRequest<JakanQueryResponse>(request);
     }
 }

@@ -1,93 +1,41 @@
-enum RequestMediaOptions {
-    anime = "anime",
-    manga = "manga",
-    characters = "characters",
-    people = "people",
-}
+// TODO: Move all enums to searchConstants.ts
+// noinspection DuplicatedCode
 
-enum SortOptions {
-    asc = "asc",
-    desc = "desc",
-}
+import {
+    AnimeMediaTypes,
+    AnimeRating,
+    AnimeSearchOrder,
+    AnimeStatus,
+    BaseMediaSearchOrder,
+    CharactersSearchOrder,
+    ExtraAnimeInfoBase,
+    ExtraInfoBase,
+    ExtraMangaInfoBase,
+    ExtraMiscInfoBase,
+    MangaMediaTypes,
+    MangaSearchOrder,
+    MangaStatus,
+    PeopleSearchOrder,
+    SortOptions,
+} from "./searchConstants";
+import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 
-enum BaseMediaSearchOrder {
-    malId = "mal_id",
-    title = "title",
-    startDate = "start_date",
-    endDate = "end_date",
-    score = "score",
-    scored_by = "scored_by",
-    rank = "rank",
-    popularity = "popularity",
-    members = "members",
-    favorites = "favorites",
-}
-
-enum CharactersSearchOrder {
-    malId = "mal_id",
-    name = "name",
-    favorites = "favorites",
-}
-
-enum PeopleSearchOrder {
-    malId = "mal_id",
-    name = "name",
-    favorites = "favorites",
-    birthday = "birthday",
-}
-
-enum AnimeSearchOrder {
-    type = "type",
-    rating = "rating",
-    episodes = "episodes",
-}
-
-enum MangaSearchOrder {
-    chapters = "chapters",
-    volumes = "volumes",
-}
-
-enum AnimeRating {
-    g = "g",
-    pg = "pg",
-    pg13 = "pg13",
-    r17 = "r17",
-    r = "r",
-    rx = "rx",
-}
-
-enum MangaStatus {
-    publishing = "publishing",
-    complete = "complete",
-    hiatus = "hiatus",
-    discontinued = "discontinued",
-    upcoming = "upcoming",
-}
-
-enum AnimeStatus {
-    airing = "airing",
-    complete = "complete",
-    upcoming = "upcoming",
-}
-
-enum MangaMediaTypes {
-    manga = "manga",
-    novel = "novel",
-    lightnovel = "lightnovel",
-    oneshot = "oneshot",
-    doujin = "doujin",
-    manwha = "manwha",
-    manhua = "manhua",
-}
-
-enum AnimeMediaTypes {
-    tv = "tv",
-    movie = "movie",
-    ova = "ova",
-    special = "special",
-    ona = "ona",
-    music = "music",
-}
+/*
+ * Using Enum | subtype as type is recognized by Jetbrains IDEs (and i belive most IDEs that build an AST tree)
+ * autocomplete, but most LSP-based editors fail to instrospect the enum types and offer correct auto complete options.
+ * This means that VS Code/Neovim/etc. would show only the "subtype" type,
+ * meaning most users would not receive any autocompletion.
+ * While using "keyof typeof Enum" makes so that inserting any other type as input would be recognized as error, it's still
+ * a valid workaround for the issue.
+ *
+ * Example:
+ * type enumWithSubtype = {
+ *    sort: SortOptions | string
+ * }
+ *
+ * Most editors would recognize the "sort" property as only of type string, and would not offer any autocompletion.
+ * So make sure to use the "keyof typeof Enum" type when defining the type using Enums.
+ */
 
 // Some parameters are common to both manga and anime, so we define them here.
 interface JakanMediaSearchParameters {
@@ -100,104 +48,104 @@ interface JakanMediaSearchParameters {
     sfw?: boolean;
     genres?: string;
     genres_exclude?: string;
-    sort?: SortOptions | string;
+    sort?: keyof typeof SortOptions;
     letter?: string;
     producers?: string;
     start_date?: string;
     end_date?: string;
 }
 
+/*
+ * Search parameters for non-media related searches.
+ * These are common to both characters and people.
+ */
 interface JakanMiscSearchParameters {
     q: string;
     page?: number;
     limit?: number;
-    sort?: SortOptions | string;
+    sort?: keyof typeof SortOptions;
     letter?: string;
 }
 
 interface CharacterSearchParameters extends JakanMiscSearchParameters {
-    order_by?: CharactersSearchOrder | string;
+    order_by?: keyof typeof CharactersSearchOrder;
 }
 
 interface PeopleSearchParameters extends JakanMiscSearchParameters {
-    order_by?: PeopleSearchOrder | string;
+    order_by?: keyof typeof PeopleSearchOrder;
 }
 
 // Be sure to check Jikan docs.
 interface MangaSearchParameters extends JakanMediaSearchParameters {
-    type?: MangaMediaTypes | string;
-    status?: MangaStatus | string;
-    order_by?: MangaSearchOrder | BaseMediaSearchOrder | string;
+    type?: keyof typeof MangaMediaTypes;
+    status?: keyof typeof MangaStatus;
+    order_by?:
+        | keyof typeof MangaSearchOrder
+        | keyof typeof BaseMediaSearchOrder;
     magazines?: string;
 }
 
 // Be sure to check Jikan docs.
 interface AnimeSearchParameters extends JakanMediaSearchParameters {
-    type?: AnimeMediaTypes | string;
-    status?: AnimeStatus | string;
-    rating?: AnimeRating | string;
-    order_by?: AnimeSearchOrder | BaseMediaSearchOrder | string;
+    type?: keyof typeof AnimeMediaTypes;
+    status?: keyof typeof AnimeStatus;
+    rating?: keyof typeof AnimeRating;
+    order_by?:
+        | keyof typeof AnimeSearchOrder
+        | keyof typeof BaseMediaSearchOrder;
 }
 
-// Common for both anime and manga.
-enum ExtraInfoBase {
-    full = "full",
-    characters = "characters",
-    news = "news",
-    forum = "forum",
-    pictures = "pictures",
-    statistics = "statistics",
-    moreInfo = "moreinfo",
-    recommendations = "recommendations",
-    userUpdates = "userupdates",
-    reviews = "reviews",
-    relations = "relations",
-    themes = "themes",
-    external = "external",
-}
+type ExtraAnimeInfo =
+    | keyof typeof ExtraInfoBase
+    | keyof typeof ExtraAnimeInfoBase;
+type ExtraMangaInfo =
+    | keyof typeof ExtraInfoBase
+    | keyof typeof ExtraMangaInfoBase;
+type ExtraCharactersInfo = keyof typeof ExtraMiscInfoBase;
+type ExtraPeopleInfo = keyof typeof ExtraMiscInfoBase;
 
-enum ExtraAnimeInfoBase {
-    episodes = "episodes",
-    videos = "videos",
-    streaming = "streaming",
-    staff = "staff",
-}
-
-enum ExtraMangaInfoBase {
-    topics = "topics",
-}
-
-enum ExtraMiscInfoBase {
-    full = "full",
-    voice = "voice",
-    anime = "anime",
-    manga = "manga",
-    pictures = "pictures",
-}
-
-type ExtraAnimeInfo = ExtraInfoBase | ExtraAnimeInfoBase | string;
-type ExtraMangaInfo = ExtraInfoBase | ExtraMangaInfoBase | string;
-type ExtraCharactersInfo = ExtraMiscInfoBase | string;
-type ExtraPeopleInfo = ExtraMiscInfoBase | string;
-
-type SearchRequestType =
-    | AnimeSearchParameters
-    | MangaSearchParameters
-    | CharacterSearchParameters
-    | PeopleSearchParameters;
-
-type SearchExtraInfoType =
+/*
+ * This makes it possible to use the ExtraInfo type without type arguments.
+ */
+type SearchRequestExtraInfo =
     | ExtraAnimeInfo
     | ExtraMangaInfo
     | ExtraCharactersInfo
     | ExtraPeopleInfo;
 
-export { RequestMediaOptions };
+/*
+ * This is used when it's impossible to use type parameters and use the QueryOrId type.
+ */
+
+type SearchRequestParameters =
+    | AnimeSearchParameters
+    | MangaSearchParameters
+    | CharacterSearchParameters
+    | PeopleSearchParameters
+    | string;
+
+type ExtraInfo<
+    T extends
+        | ExtraAnimeInfo
+        | ExtraMangaInfo
+        | ExtraCharactersInfo
+        | ExtraPeopleInfo
+> = T;
+
+// Shorthand for the SearchRequestExtraInfo + number types
+type QueryOrId<T extends SearchRequestParameters | number | string> =
+    | number
+    | string
+    | T;
+
+type JakanResponse<T extends JakanIDResponse | JakanQueryResponse> = T;
 
 export type {
-    
-    SearchRequestType,
-    SearchExtraInfoType,
+    QueryOrId,
+    ExtraInfo,
+    JakanResponse,
+    SearchRequestParameters,
+    SearchRequestExtraInfo,
     AnimeSearchParameters,
     MangaSearchParameters,
     CharacterSearchParameters,

@@ -10,7 +10,7 @@
         "prebuild": "rimraf dist",
         "run": "npm build",
         "build": "parcel build",
-        "test": "npm run build && node dist/test.js"
+        "test": "jest"
     },
     "keywords": [],
     "author": "Lamarcke",
