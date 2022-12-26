@@ -1,6 +1,7 @@
 import JakanClient from "../base";
 import { AxiosRequestHeaders } from "axios";
 import JakanUsersResponse from "./userTypes";
+import { JakanUsersError } from "../../exceptions";
 
 // A client responsible for communication with MAL official API for user related requests.
 // Please read the Jakan README for more info on how this works.
@@ -30,8 +31,9 @@ class JakanUsers extends JakanClient {
                 }
             );
             return get.data;
+
+            // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
         } catch (e: any) {
-            console.error(e);
             throw new Error();
         }
     }
@@ -52,8 +54,7 @@ class JakanUsers extends JakanClient {
             );
             return get.data;
         } catch (e: any) {
-            console.error(e);
-            throw new Error();
+            throw new JakanUsersError(e);
         }
     }
 }

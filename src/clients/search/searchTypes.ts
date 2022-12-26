@@ -23,13 +23,12 @@ import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 /*
  * Using Enum | subtype as type is recognized by Jetbrains IDEs (and i belive most IDEs that build an AST tree)
  * autocomplete, but most LSP-based editors fail to instrospect the enum types and offer correct auto complete options.
- * This means that VS Code/Neovim/etc. would show only the "subtype" type,
- * meaning most users would not receive any autocompletion.
+ * This means that VS Code/Neovim/etc. would show only the "subtype" type, meaning most users would not receive any autocompletion.
  * While using "keyof typeof Enum" makes so that inserting any other type as input would be recognized as error, it's still
  * a valid workaround for the issue.
  *
  * Example:
- * type enumWithSubtype = {
+ * interface enumWithSubtype = {
  *    sort: SortOptions | string
  * }
  *
@@ -132,7 +131,6 @@ type ExtraInfo<
         | ExtraPeopleInfo
 > = T;
 
-// Shorthand for the SearchRequestExtraInfo + number types
 type QueryOrId<T extends SearchRequestParameters | number | string> =
     | number
     | string
