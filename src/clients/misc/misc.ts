@@ -1,8 +1,7 @@
 import JakanClient from "../base";
 
 class JakanMisc extends JakanClient {
-
-    constructor(baseURL: string,) {
+    constructor(baseURL: string) {
         super(baseURL);
     }
 }

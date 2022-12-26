@@ -16,7 +16,7 @@ import {
 } from "./searchTypes";
 import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 import { JakanSearchError } from "../../exceptions";
-import { RequestMediaOptions } from "./searchConstants";
+import { SearchMediaOptions } from "./searchConstants";
 
 class JakanSearch extends JakanClient {
     anime(id: number, extraInfo: ExtraAnimeInfo): Promise<JakanIDResponse>;
@@ -31,7 +31,7 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             AnimeSearchParameters,
             ExtraAnimeInfo
-        >(RequestMediaOptions.anime, queryOrId, extraInfo);
+        >(SearchMediaOptions.anime, queryOrId, extraInfo);
     }
 
     manga(id: number, extraInfo: ExtraMangaInfo): Promise<JakanIDResponse>;
@@ -46,7 +46,7 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             MangaSearchParameters,
             ExtraMangaInfo
-        >(RequestMediaOptions.manga, queryOrId, extraInfo);
+        >(SearchMediaOptions.manga, queryOrId, extraInfo);
     }
 
     characters(
@@ -63,7 +63,7 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             CharacterSearchParameters,
             ExtraCharactersInfo
-        >(RequestMediaOptions.characters, queryOrId, extraInfo);
+        >(SearchMediaOptions.characters, queryOrId, extraInfo);
     }
 
     people(id: number, extraInfo: ExtraPeopleInfo): Promise<JakanIDResponse>;
@@ -77,7 +77,7 @@ class JakanSearch extends JakanClient {
         return await this._prepareRequest<
             PeopleSearchParameters,
             ExtraPeopleInfo
-        >(RequestMediaOptions.people, queryOrId, extraInfo);
+        >(SearchMediaOptions.people, queryOrId, extraInfo);
     }
 
     private async _prepareRequest<
