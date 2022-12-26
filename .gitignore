@@ -192,3 +192,5 @@ dist
 .pnp.*
 
 src/test.ts
+.idea
+.vscode
