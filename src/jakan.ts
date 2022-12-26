@@ -6,13 +6,13 @@ import JakanSearch from "./clients/search/search";
 import JakanUsers from "./clients/users/users";
 import { JakanBuilderError } from "./exceptions";
 import { BuilderTargets } from "./generalTypes";
-
 /*
  * Jakan is the main class of the library.
  * It allows users to easily build a JakanClient.
  * It's also used to specify the cache provider.
  * If no cache provider is specified, defaults to memory.
  */
+
 class Jakan {
     private builder: JakanClientBuilder;
 
