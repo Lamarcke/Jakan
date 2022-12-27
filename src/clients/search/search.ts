@@ -7,18 +7,23 @@ import {
     ExtraAnimeInfo,
     ExtraMangaInfo,
     MangaSearchParameters,
-    SearchRequestParameters,
-    SearchRequestExtraInfo,
     ExtraCharactersInfo,
     ExtraPeopleInfo,
-    JakanResponse,
     ExtraInfo,
 } from "./searchTypes";
-import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
+import {
+    JakanIDResponse,
+    JakanQueryResponse,
+} from "../../response/responseTypes";
 import { JakanSearchError } from "../../exceptions";
 import { SearchMediaOptions } from "./searchConstants";
+import { BASE_JIKAN_URL } from "../../constants";
 
 class JakanSearch extends JakanClient {
+    constructor() {
+        super(BASE_JIKAN_URL);
+    }
+
     anime(id: number, extraInfo: ExtraAnimeInfo): Promise<JakanIDResponse>;
     anime(query: AnimeSearchParameters): Promise<JakanQueryResponse>;
     anime(id: number): Promise<JakanIDResponse>;
@@ -28,10 +33,11 @@ class JakanSearch extends JakanClient {
         queryOrId: QueryOrId<AnimeSearchParameters>,
         extraInfo?: ExtraAnimeInfo
     ): Promise<JakanIDResponse | JakanQueryResponse> {
-        return await this._prepareRequest<
-            AnimeSearchParameters,
-            ExtraAnimeInfo
-        >(SearchMediaOptions.anime, queryOrId, extraInfo);
+        return await this.prepareRequest<AnimeSearchParameters, ExtraAnimeInfo>(
+            SearchMediaOptions.anime,
+            queryOrId,
+            extraInfo
+        );
     }
 
     manga(id: number, extraInfo: ExtraMangaInfo): Promise<JakanIDResponse>;
@@ -43,10 +49,11 @@ class JakanSearch extends JakanClient {
         queryOrId: QueryOrId<MangaSearchParameters>,
         extraInfo?: ExtraMangaInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
-        return await this._prepareRequest<
-            MangaSearchParameters,
-            ExtraMangaInfo
-        >(SearchMediaOptions.manga, queryOrId, extraInfo);
+        return await this.prepareRequest<MangaSearchParameters, ExtraMangaInfo>(
+            SearchMediaOptions.manga,
+            queryOrId,
+            extraInfo
+        );
     }
 
     characters(
@@ -60,7 +67,7 @@ class JakanSearch extends JakanClient {
         queryOrId: QueryOrId<CharacterSearchParameters>,
         extraInfo?: ExtraCharactersInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
-        return await this._prepareRequest<
+        return await this.prepareRequest<
             CharacterSearchParameters,
             ExtraCharactersInfo
         >(SearchMediaOptions.characters, queryOrId, extraInfo);
@@ -74,87 +81,48 @@ class JakanSearch extends JakanClient {
         queryOrId: QueryOrId<PeopleSearchParameters>,
         extraInfo?: ExtraPeopleInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
-        return await this._prepareRequest<
+        return await this.prepareRequest<
             PeopleSearchParameters,
             ExtraPeopleInfo
         >(SearchMediaOptions.people, queryOrId, extraInfo);
     }
 
-    private async _prepareRequest<
-        T extends SearchRequestParameters,
-        E extends SearchRequestExtraInfo
-    >(
+    private async prepareRequest<T extends QueryOrId, E extends ExtraInfo>(
         media: string,
         queryOrId: QueryOrId<T>,
-        extraInfo?: ExtraInfo<E>
+        extraInfo?: E
     ): Promise<JakanIDResponse | JakanQueryResponse> {
         if (typeof queryOrId === "number") {
-            return await this._withId(media, queryOrId, extraInfo);
+            return await this.withId(media, queryOrId, extraInfo);
         } else if (
             typeof queryOrId === "string" ||
             typeof queryOrId === "object"
         ) {
-            return await this._withQuery(media, queryOrId);
+            // TODO: fix extra-info parameter missing
+            return await this.withQuery(media, queryOrId);
         } else {
             throw new JakanSearchError("No query or ID parameter specified.");
         }
     }
 
-    private async _makeRequest<T extends JakanQueryResponse | JakanIDResponse>(
-        request: string
-    ): Promise<JakanResponse<T>> {
-        try {
-            const get = await this.axiosInstance.get(request);
-            return get.data;
-
-            // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
-        } catch (e: any) {
-            // @eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if (e.response) {
-                throw new JakanSearchError(e.response);
-            } else {
-                throw new JakanSearchError(
-                    "An error unrelated to Jikan happened while making the request."
-                );
-            }
-        }
-    }
-
-    private async _withId(
+    private async withId(
         media: string,
         id: number,
         extraInfo?: string
     ): Promise<JakanIDResponse> {
-        const request =
-            extraInfo != null
-                ? `${media}/${id}/${extraInfo}`
-                : `${media}/${id}`;
-        return await this._makeRequest<JakanIDResponse>(request);
+        const request = this.idRequestBuilder(media, id, extraInfo);
+        return await this.makeRequest<JakanIDResponse>(request);
     }
 
-    private _queryRequestBuilder(
+    private async withQuery<T extends QueryOrId>(
         media: string,
-        query: SearchRequestParameters
-    ): string {
-        let request = `${media}?`;
-        if (typeof query === "object") {
-            Object.entries(query).forEach(([key, value], index) => {
-                const toAppendToRequest =
-                    index === 0 ? `${key}=${value}` : `&${key}=${value}`;
-                request = request + toAppendToRequest;
-            });
-        } else {
-            request = request + `q=${query}`;
-        }
-        return request;
-    }
-
-    private async _withQuery(
-        media: string,
-        query: SearchRequestParameters
+        query: T
     ): Promise<JakanQueryResponse> {
-        const request = this._queryRequestBuilder(media, query);
-        return await this._makeRequest<JakanQueryResponse>(request);
+        if (typeof query === "number") {
+            throw new JakanSearchError("Can't");
+        }
+        const request = this.queryRequestBuilder(media, query);
+        return await this.makeRequest<JakanQueryResponse>(request);
     }
 }
 

@@ -7,12 +7,10 @@ enum MiscRequestOptions {
     reviews = "reviews",
 }
 
-enum RandomOptions {
+enum RecommendationsTargetOptions {
     anime = "anime",
     manga = "manga",
-    characters = "characters",
-    people = "people",
-    users = "users",
 }
 
-export type { RandomOptions };
+export { MiscRequestOptions };
+export type { RecommendationsTargetOptions };

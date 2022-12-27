@@ -24,6 +24,13 @@ class JakanSearchError extends JakanError {
     }
 }
 
+class JakanMiscError extends JakanError {
+    constructor(message: string) {
+        super(message);
+        this.name = "JakanMiscError";
+    }
+}
+
 class JakanUsersError extends JakanError {
     constructor(message: string) {
         super(message);
@@ -32,8 +39,10 @@ class JakanUsersError extends JakanError {
 }
 
 export {
+    JakanError,
     JakanBuilderError,
     JakanSettingsError,
     JakanSearchError,
+    JakanMiscError,
     JakanUsersError,
 };

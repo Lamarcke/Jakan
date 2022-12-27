@@ -1,4 +1,4 @@
-import JakanSearch from "../search/search";
+import JakanSearch from "../clients/search/search";
 
 interface JakanData {
     [key: string]: any;

@@ -4,7 +4,7 @@ import JakanClient from "./clients/base";
 import JakanSearch from "./clients/search/search";
 import JakanMisc from "./clients/misc/misc";
 import { RedisClientType } from "redis";
-import { BASE_JIKAN_URL, BASE_MAL_URL } from "./constants";
+
 import JakanUsers from "./clients/users/users";
 
 class JakanClientBuilder implements JakanBuilder {
@@ -63,14 +63,14 @@ class JakanClientBuilder implements JakanBuilder {
         let instance: JakanClient;
 
         if (this.builderTarget === BuilderTargets.search) {
-            instance = new JakanSearch(BASE_JIKAN_URL);
+            instance = new JakanSearch();
         } else if (this.builderTarget === BuilderTargets.misc) {
-            instance = new JakanMisc(BASE_JIKAN_URL);
+            instance = new JakanMisc();
         } else if (this.builderTarget === BuilderTargets.users) {
             if (this._clientID == undefined) {
                 throw new JakanBuilderError("No clientID specified.");
             }
-            instance = new JakanUsers(BASE_MAL_URL, this._clientID);
+            instance = new JakanUsers(this._clientID);
         } else {
             throw new JakanBuilderError("No build target selected");
         }
@@ -82,8 +82,7 @@ class JakanClientBuilder implements JakanBuilder {
             this.webStorage
         );
 
-        // @ts-ignore
-        return instance;
+        return instance as BuilderReturn<T>;
     }
 }
 
