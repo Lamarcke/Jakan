@@ -19,7 +19,7 @@ What can you expect?
 
 -   Platform-agnostic:
     We use Parcel and Babel to build the library with support for most browsers and node environments. 
-    This includes automatic polyfills.
+    This includes automatic polyfills and compatibility with CommonJS and ESM.
     We are also limiting ourselves to ES5 syntax for maximum compatibility.
 
 -   Typescript first  
@@ -28,8 +28,9 @@ What can you expect?
     Results are also mapped.
 
 -   Javascript available
-    You can also use this library with plain javascript. Our end code is just a Javascript file with a `index.d.ts`.  
-    We still highly recommend using Typescript for the extra goodies! ;)
+    You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`. 
+    Even with plain JS, some editors are able to check this file and show some basic type hinting. 
+    We still highly recommend using Typescript for the extra goodies. ;)
 
 -   As simple as it gets  
     We use `axios` under the hood. All methods are async by default. No expensive calculations, no unnecessary dependencies.
@@ -134,6 +135,11 @@ You can also import and use `JakanMisc` and `JakanUsers`.
 
 **PS**: This should only happen in versions prior to `1.0`. Make sure the build methods are being called in the correct
 order if you are on latter versions.
+
+## Javascript usage
+
+The library works the same when using plain Javascript. You just won't get the Typescript goodies.
+Still, LSP-based editors (like VS Code) and IDEs should be able to instrospect the `index.d.ts` file and provide you with some basic type hinting.
 
 ### Project status
 

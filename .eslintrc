@@ -18,7 +18,12 @@
   "rules": {
     "no-console": 2,
     // Means error
-    "prettier/prettier": 1
+    "prettier/prettier": [
+      1,
+      {
+        "endOfLine": "auto"
+      }
+    ]
     // Means warning
   }
 }
