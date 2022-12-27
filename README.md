@@ -60,7 +60,7 @@ repo. In your `package.json` file:
 
 ```json
 "dependencies": {
-"jakan": "Lamarcke/Jakan#0.9"
+    "jakan": "Lamarcke/Jakan#0.9"
 },
 ```
 

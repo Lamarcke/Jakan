@@ -4,9 +4,16 @@ import {
     JakanIDResponse,
     JakanQueryResponse,
 } from "../../response/responseTypes";
-import { RandomRequestOptions, RecommendationsRequestQuery } from "./miscTypes";
+import {
+    RandomRequestOptions,
+    RecommendationsRequestQuery,
+    TopRequestQuery,
+} from "./miscTypes";
 import { JakanError, JakanMiscError } from "../../exceptions";
-import { RecommendationsTargetOptions } from "./miscConstants";
+import {
+    RecommendationsTargetOptions,
+    TopRequestOptions,
+} from "./miscConstants";
 
 class JakanMisc extends JakanClient {
     /*
@@ -46,6 +53,33 @@ class JakanMisc extends JakanClient {
         query?: RecommendationsRequestQuery
     ): Promise<JakanQueryResponse> {
         const endpointBase = `recommendations/${media}`;
+        let request = "";
+        if (query != undefined && typeof query == "object") {
+            request = this.queryRequestBuilder(endpointBase, query);
+        } else {
+            request = endpointBase;
+        }
+
+        try {
+            const get = await this.makeRequest<JakanQueryResponse>(request);
+            return get;
+        } catch (e: unknown) {
+            if (e instanceof JakanError) {
+                throw new JakanMiscError(e.message);
+            } else {
+                throw new JakanMiscError(
+                    "An error unrelated to Jikan happened while making the request: " +
+                        e
+                );
+            }
+        }
+    }
+
+    async top(
+        media: keyof typeof TopRequestOptions,
+        query?: TopRequestQuery
+    ): Promise<JakanQueryResponse> {
+        const endpointBase = `top/${media}`;
         let request = "";
         if (query != undefined && typeof query == "object") {
             request = this.queryRequestBuilder(endpointBase, query);

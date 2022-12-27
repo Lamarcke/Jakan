@@ -23,12 +23,27 @@ describe("JakanMisc", () => {
     test("should return recent anime recommendations with query", async () => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
-        const recommendations = await misc.recommendations({
-            target: "anime",
+        const recommendations = await misc.recommendations("anime", {
             page: 2,
         });
-
         expect(recommendations).toHaveProperty("data");
-        expect(recommendations.data).toBeGreaterThan(0);
+        expect(recommendations.data.length).toBeGreaterThan(0);
+    });
+    test("should return top anime", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const top = await misc.top("anime");
+        expect(top).toHaveProperty("data");
+        expect(top.data.length).toBeGreaterThan(0);
+    });
+    test("should return top anime with query", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const top = await misc.top("anime", {
+            type: "ova",
+            filter: "bypopularity",
+        });
+        expect(top).toHaveProperty("data");
+        expect(top.data.length).toBeGreaterThan(0);
     });
 });
