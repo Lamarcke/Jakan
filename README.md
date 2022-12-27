@@ -27,7 +27,7 @@ What can you expect?
     (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
     Results are also mapped.
 
--   Javascript available
+-   Javascript available  
     You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`. 
     Even with plain JS, some editors are able to check this file and show some basic type hinting. 
     We still highly recommend using Typescript for the extra goodies. ;)
