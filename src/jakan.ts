@@ -13,6 +13,7 @@ import { BuilderTargets } from "./generalTypes";
  * It's also used to specify the cache provider.
  * If no cache provider is specified, defaults to memory.
  */
+
 class Jakan {
     private builder: JakanClientBuilder;
 

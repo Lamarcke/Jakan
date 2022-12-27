@@ -1,6 +1,3 @@
-// TODO: Move all enums to searchConstants.ts
-// noinspection DuplicatedCode
-
 import {
     AnimeMediaTypes,
     AnimeRating,
@@ -18,18 +15,16 @@ import {
     PeopleSearchOrder,
     SortOptions,
 } from "./searchConstants";
-import { JakanIDResponse, JakanQueryResponse } from "../response/responseTypes";
 
 /*
  * Using Enum | subtype as type is recognized by Jetbrains IDEs (and i belive most IDEs that build an AST tree)
  * autocomplete, but most LSP-based editors fail to instrospect the enum types and offer correct auto complete options.
- * This means that VS Code/Neovim/etc. would show only the "subtype" type,
- * meaning most users would not receive any autocompletion.
+ * This means that VS Code/Neovim/etc. would show only the "subtype" type, meaning most users would not receive any autocompletion.
  * While using "keyof typeof Enum" makes so that inserting any other type as input would be recognized as error, it's still
  * a valid workaround for the issue.
  *
  * Example:
- * type enumWithSubtype = {
+ * interface enumWithSubtype = {
  *    sort: SortOptions | string
  * }
  *
@@ -57,7 +52,7 @@ interface JakanMediaSearchParameters {
 
 /*
  * Search parameters for non-media related searches.
- * These are common to both characters and people.
+ * These are common to both characters and people requests.
  */
 interface JakanMiscSearchParameters {
     q: string;
@@ -85,7 +80,6 @@ interface MangaSearchParameters extends JakanMediaSearchParameters {
     magazines?: string;
 }
 
-// Be sure to check Jikan docs.
 interface AnimeSearchParameters extends JakanMediaSearchParameters {
     type?: keyof typeof AnimeMediaTypes;
     status?: keyof typeof AnimeStatus;
@@ -104,46 +98,41 @@ type ExtraMangaInfo =
 type ExtraCharactersInfo = keyof typeof ExtraMiscInfoBase;
 type ExtraPeopleInfo = keyof typeof ExtraMiscInfoBase;
 
-/*
- * This makes it possible to use the ExtraInfo type without type arguments.
- */
+// Alias for the possible ExtraInfo types
 type SearchRequestExtraInfo =
     | ExtraAnimeInfo
     | ExtraMangaInfo
     | ExtraCharactersInfo
     | ExtraPeopleInfo;
 
-/*
- * This is used when it's impossible to use type parameters and use the QueryOrId type.
- */
-
+// Alias for the possible SearchParameters types
 type SearchRequestParameters =
     | AnimeSearchParameters
     | MangaSearchParameters
     | CharacterSearchParameters
-    | PeopleSearchParameters
-    | string;
+    | PeopleSearchParameters;
 
+/*
+ * This type determines which type of extra info is being used by a function.
+ *
+ */
 type ExtraInfo<
-    T extends
-        | ExtraAnimeInfo
-        | ExtraMangaInfo
-        | ExtraCharactersInfo
-        | ExtraPeopleInfo
-> = T;
+    T extends SearchRequestExtraInfo | string = SearchRequestExtraInfo
+> = SearchRequestExtraInfo | string | T;
 
-// Shorthand for the SearchRequestExtraInfo + number types
-type QueryOrId<T extends SearchRequestParameters | number | string> =
+/*
+ * Type to determine if a search function is using query parameters (string | object) or a id (number).
+ * Defaults to string if no type is specified.
+ */
+type QueryOrId<T extends SearchRequestParameters | number | string = string> =
+    | SearchRequestParameters
     | number
     | string
     | T;
 
-type JakanResponse<T extends JakanIDResponse | JakanQueryResponse> = T;
-
 export type {
     QueryOrId,
     ExtraInfo,
-    JakanResponse,
     SearchRequestParameters,
     SearchRequestExtraInfo,
     AnimeSearchParameters,

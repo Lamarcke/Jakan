@@ -1,7 +1,7 @@
 /*
  * Available request types
  */
-enum RequestMediaOptions {
+enum SearchMediaOptions {
     anime = "anime",
     manga = "manga",
     characters = "characters",
@@ -160,7 +160,7 @@ enum ExtraPeopleInfoBase {
 }
  */
 
-export { RequestMediaOptions };
+export { SearchMediaOptions };
 export type {
     SortOptions,
     BaseMediaSearchOrder,

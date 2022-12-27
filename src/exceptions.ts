@@ -1,8 +1,11 @@
+// Base class for all Jakan errors.
 class JakanError extends Error {}
 
 class JakanBuilderError extends JakanError {
     constructor(message: string) {
-        super(message);
+        const defaultMessage =
+            "A error occurred while building a JakanClient: ";
+        super(defaultMessage + message);
         this.name = "JakanBuilderError";
     }
 }
@@ -21,6 +24,13 @@ class JakanSearchError extends JakanError {
     }
 }
 
+class JakanMiscError extends JakanError {
+    constructor(message: string) {
+        super(message);
+        this.name = "JakanMiscError";
+    }
+}
+
 class JakanUsersError extends JakanError {
     constructor(message: string) {
         super(message);
@@ -28,4 +38,11 @@ class JakanUsersError extends JakanError {
     }
 }
 
-export { JakanBuilderError, JakanSettingsError, JakanSearchError };
+export {
+    JakanError,
+    JakanBuilderError,
+    JakanSettingsError,
+    JakanSearchError,
+    JakanMiscError,
+    JakanUsersError,
+};

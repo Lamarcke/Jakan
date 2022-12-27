@@ -14,18 +14,26 @@ while using the official API for user-related requests.
 What can you expect?
 
 -   All requests are cached by default in a store of your choice.  
-    This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to MAL.  
+    This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to Jikan/MAL.  
     `Powered by axios-cache-interceptor`
 
--   Platform-agnostic: Built to work with Node and on the browser.
+-   Platform-agnostic:
+    We use Parcel and Babel to build the library with support for most browsers and node environments. 
+    This includes automatic polyfills and compatibility with CommonJS and ESM.
+    We are also limiting ourselves to ES5 syntax for maximum compatibility.
 
 -   Typescript first  
     Typescript is a first citizen here, and almost all request endpoints and their parameters
     (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
     Results are also mapped.
 
+-   Javascript available
+    You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`. 
+    Even with plain JS, some editors are able to check this file and show some basic type hinting. 
+    We still highly recommend using Typescript for the extra goodies. ;)
+
 -   As simple as it gets  
-    We use axios under the hood. All methods are async by default. No expensive calculations, no unnecessary dependencies.
+    We use `axios` under the hood. All methods are async by default. No expensive calculations, no unnecessary dependencies.
 
 ## Installation
 
@@ -35,7 +43,8 @@ or
 
 ## THE 1.0.0 UPDATE
 
-Starting from version `1.0`, a small change will happen on how the builder process for the Jakan class is done. The change is pretty simple:  
+Starting from version `1.0`, a small change will happen on how the builder process for the Jakan class is done. The
+change is pretty simple:  
 We will be inverting the order of methods to call in the builder class, the new order is as follow:  
 `choosing cache provider --> choosing media type`  
 instead of:  
@@ -43,14 +52,16 @@ instead of:
 
 The main reason for this change is described in this [issue](https://github.com/Lamarcke/Jakan/issues/2).
 
-When this happens, this README will be updated acorddingly, you can be sure that the code present in the quickstart guides below are the correct way.
+When this happens, this README will be updated acorddingly, you can be sure that the code present in the quickstart
+guides below are the correct way.
 
-If you have a service built on top of this project, and don't want to update now, you can pin the `0.9` branch from this repo. In your `package.json` file:
+If you have a service built on top of this project, and don't want to update now, you can pin the `0.9` branch from this
+repo. In your `package.json` file:
 
 ```json
 "dependencies": {
-    "jakan": "Lamarcke/Jakan#0.9"
-  },
+"jakan": "Lamarcke/Jakan#0.9"
+},
 ```
 
 This change will only happen when the `1.0` version is out in the `npm` registry.
@@ -65,7 +76,8 @@ We include three clients for requests:
 `JakanMisc` - Responsible for everything related with miscellaneous data. Includes schedules, recommendations and etc.  
 `JakanUsers` - The client responsible for leveraging MAL. Authenticates, retrieves and changes a user's library.
 
-Choosing a client is simple, just use the respective `.for'Client'()` (where `'Client'` is the client name.) method on Jakan.  
+Choosing a client is simple, just use the respective `.for'Client'()` (where `'Client'` is the client name.) method on
+Jakan.  
 Then, choose a cache provider. You can use a memory cache or the WebStorage API for a quickstart.
 
 ```typescript
@@ -87,7 +99,8 @@ jakan.anime(1, "characters")
 ### Where are my types?
 
 We export types for Clients and request building for your usage.  
-You don't actually need to import these types, you can just trust your editor, and it will autocomplete and suggest values for you.  
+You don't actually need to import these types, you can just trust your editor, and it will autocomplete and suggest
+values for you.  
 e.g.:
 
 ```typescript
@@ -107,7 +120,8 @@ jakan.anime(myQuery).then();
 Note: all enums are exported as types, so you may only use their values as reference. Again, just press CTRL + Space and
 you will get the available values.
 
-If you editor is not recognizing the type of client you are building, simply import it's type and use it as a type parameter in the respective `withXXXX` method.  
+If you editor is not recognizing the type of client you are building, simply import it's type and use it as a type
+parameter in the respective `withXXXX` method.
 e.g.:
 
 ```typescript
@@ -119,7 +133,13 @@ const jakan = Jakan().forSearch().withMemory<JakanSearch>();
 This will make the editor/typescript language server understand that you are building a `JakanSearch` client.  
 You can also import and use `JakanMisc` and `JakanUsers`.
 
-**PS**: This should only happen in versions prior to `1.0`. Make sure the build methods are being called in the correct order if you are on latter versions.
+**PS**: This should only happen in versions prior to `1.0`. Make sure the build methods are being called in the correct
+order if you are on latter versions.
+
+## Javascript usage
+
+The library works the same when using plain Javascript. You just won't get the Typescript goodies.
+Still, LSP-based editors (like VS Code) and IDEs should be able to instrospect the `index.d.ts` file and provide you with some basic type hinting.
 
 ### Project status
 
@@ -129,7 +149,7 @@ PRs are very welcome.
 ## Clients
 
 -   [x] JakanSearch
--   [ ] JakanMisc
+-   [] JakanMisc
 -   [x] JakanUsers
 
 ### JakanSearch
@@ -157,25 +177,14 @@ Only public endpoints may be used.
 
 **Why so simple?**
 
-As you can see, there's only two methods that retrieve the public anime and manga list of a given user.  
-As of v4, Jikan has removed the user endpoints from their service. So if you want to access
-(this is the only thing that was possible in Jikan even before v4), change and delete entries in a user's library,
-you need to use the official API.
+Using the MAL API for this library is rather troublesome, most endpoints are protected, and you would need to setup complex OAuth2 authentication flows to be able to use them with this library.
 
-The main gripe is that using the main API requires a lot more work than just making simple get requests. They need to have their security checks in place.
+So, rather than getting in the way of the custom code you would have to build anyway, we prefer to have only the most used public endpoints available. You still need to provide a `clientID` for this to work.
 
-You need to at least register an app under your account's api page, and you then need to provide at least its ClientID to access public info.
+A refactoring to use Jikan V4 API's own user endpoints is on the works, and will be one of the milestones for 1.0.
+Once it's out, this README will be updated.
 
-Post, put and delete requests require OAuth2 authentication, they will use your own app redirect URL, and some info only relevant to your application.
-You also need to provide an PCKE challenge (which could be done in this library, it's actually very simple), and the list goes on...
-
-There's a lot of secrets involved (as in secret strings that you need to use for auth), and it's just too much for a simple wrapper library.
-
-While my original plan was to actually implement authentication and post requests, i feel that this library would just get on the way of the
-custom code a user would need to implement anyway (you need at least a hosted API/frontend for auth to work).
-
-So, if you plan to use the endpoints for anything other than getting a user's public info, you are better off implementing your own solution.
-This guide will probably help you:  
+If you want to use the protected MAL API's endpoints, this guide will probably help you:  
 [How To Fetch User Lists From The Official MyAnimeList API](https://docs.google.com/document/d/1-6H-agSnqa8Mfmw802UYfGQrceIEnAaEh4uCXAPiX5A/edit#heading=h.pgt2v0q492o3)
 
 ## Thanks

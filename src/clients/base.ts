@@ -8,15 +8,17 @@ import {
 } from "axios-cache-interceptor";
 import localforage from "localforage";
 import { RedisClientType } from "redis";
-import { JakanSettingsError } from "../exceptions";
+import { JakanError, JakanSettingsError } from "../exceptions";
 import { isBrowser, isNode } from "browser-or-node";
 import axios, { Axios } from "axios";
+import { JakanRequestParameters, JakanResponse } from "../constants";
 
 // This class is responsible for settings up the methods that create a valid axios instance.
 class JakanClient {
     private baseURL: string;
     private cacheAge: number | undefined;
     private redisClient: RedisClientType | undefined;
+    // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
     private forage: any | undefined;
     private webStorage: Storage | undefined;
     protected axiosInstance!: Axios;
@@ -36,7 +38,11 @@ class JakanClient {
             return buildStorage({
                 async find(key) {
                     const result = await client.get(`axios-cache:${key}`);
-                    return JSON.parse(result!);
+                    if (result == undefined) {
+                        return undefined;
+                    }
+
+                    return JSON.parse(result);
                 },
                 async set(key, value) {
                     await client.set(
@@ -98,6 +104,93 @@ class JakanClient {
         this.axiosInstance = setupCache(baseAxios, { storage: storage });
     }
 
+    /*
+     * Builds the query string for requests that use custom queries.
+     * For ID requests (e.g. "anime/1"), use "idRequestBuilder".
+     * Implemented here because it's used by all clients.
+     *
+     * @param endpointBase - The base string that represents the target endpoint.
+     * This should consist of everything after the base URL and before the query parameters.
+     * e.g.: "recommendations/anime", "random/manga" or "anime"
+     * This allows us to easily support deep nested endpoints, if Jikan ever implements them.
+     * See: https://docs.api.jikan.moe
+     *
+     * @param query - The query parameters to use.
+     *
+     * @returns The query string to be used in the request.
+     *
+     * @example
+     * queryRequestBuilder("anime", { q: "naruto" });
+     * // Returns "anime?q=naruto"
+     * queryRequestBuilder("anime", { q: "naruto", page: 2 });
+     * // Returns "anime?q=naruto&page=2"
+     * queryRequestBuilder("anime", { id: 1 });
+     * // Returns "anime/1"
+     */
+    queryRequestBuilder(
+        endpointBase: string,
+        query: JakanRequestParameters
+    ): string {
+        let request = `${endpointBase}?`;
+        if (typeof query === "object") {
+            Object.entries(query).forEach(([key, value], index) => {
+                const toAppendToRequest =
+                    index === 0 ? `${key}=${value}` : `&${key}=${value}`;
+                request = request + toAppendToRequest;
+            });
+        } else if (typeof query === "string") {
+            request = request + `q=${query}`;
+        } else {
+            throw new JakanError(
+                "Invalid query runtime type. Only object and string are allowed."
+            );
+        }
+        return request;
+    }
+    /*
+     * Builds the query string for id requests.
+     * Used in endpoints like "anime/1", "manga/1" or "anime/1/episodes".
+     */
+    idRequestBuilder(
+        endpointBase: string,
+        id: number,
+        extraInfo?: string
+    ): string {
+        if (typeof extraInfo === "string") {
+            return `${endpointBase}/${id}/${extraInfo}`;
+        } else {
+            return `${endpointBase}/${id}`;
+        }
+    }
+
+    /*
+     * Makes the request to Jikan.
+     * @param request - The request to make.
+     * @returns The response from Jikan.
+     * @example
+     * makeRequest("anime?q=naruto");
+     * // Returns the response from Jikan.
+     * makeRequest("anime/1");
+     * // Returns the response from Jikan.
+     */
+    async makeRequest<T extends JakanResponse>(request: string): Promise<T> {
+        try {
+            const get = await this.axiosInstance.get(request);
+            return get.data;
+
+            // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
+        } catch (e: any) {
+            if (e.response) {
+                throw new JakanError(e.response);
+            } else {
+                throw new JakanError(
+                    "An error unrelated to Jikan happened while making the request: " +
+                        e
+                );
+            }
+        }
+    }
+
     setBaseURL(url: string): void {
         this.baseURL = url;
     }
@@ -105,6 +198,7 @@ class JakanClient {
     defineSettings(
         cacheAge?: number,
         redisClient?: RedisClientType,
+        // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
         forage?: any,
         webStorage?: Storage
     ): void {
