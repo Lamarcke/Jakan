@@ -6,6 +6,9 @@
     "main": "dist/index.js",
     "module": "dist/module.js",
     "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "prepare": "npm run build",
         "prebuild": "rimraf dist",
@@ -14,7 +17,7 @@
         "test": "jest",
         "js-test": "node test.mjs"
     },
-    "keywords": [],
+    "keywords": ["jikan", "api", "wrapper", "mal", "typescript", "javascript", "node", "browser"],
     "author": "Lamarcke",
     "license": "MIT",
     "devDependencies": {
