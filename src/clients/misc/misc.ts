@@ -20,6 +20,14 @@ import {
     TopRequestOptions,
 } from "./miscConstants";
 
+/*
+ * TODO:
+ * - [ ] Add support for the following endpoints:
+ * - [x] /reviews
+ * - [ ] /genres
+ *
+ */
+
 class JakanMisc extends JakanClient {
     /*
      * The implementation for the JakanMisc client.
@@ -71,6 +79,23 @@ class JakanMisc extends JakanClient {
             request = endpointBase;
         }
 
+        try {
+            const get = await this.makeRequest<JakanQueryResponse>(request);
+            return get;
+        } catch (e: unknown) {
+            if (e instanceof JakanError) {
+                throw new JakanMiscError(e.message);
+            } else {
+                throw new JakanMiscError(
+                    "An error unrelated to Jikan happened while making the request: " +
+                        e
+                );
+            }
+        }
+    }
+
+    async reviews(media: "anime" | "manga"): Promise<JakanQueryResponse> {
+        const request = `reviews/${media}`;
         try {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
