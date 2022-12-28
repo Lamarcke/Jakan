@@ -10,7 +10,7 @@ import localforage from "localforage";
 import { RedisClientType } from "redis";
 import { JakanError, JakanSettingsError } from "../exceptions";
 import { isBrowser, isNode } from "browser-or-node";
-import axios, { Axios } from "axios";
+import axios, { Axios, AxiosError } from "axios";
 import { JakanResponse } from "../constants";
 
 // This class is responsible for settings up the methods that create a valid axios instance.
@@ -174,9 +174,10 @@ class JakanClient {
             return get.data;
 
             // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
-        } catch (e: any) {
-            if (e.response) {
-                throw new JakanError(e.response);
+        } catch (e: unknown) {
+            if (e instanceof AxiosError) {
+                // Axios errors should be visible to the library end users as-is.
+                throw e;
             } else {
                 throw new JakanError(
                     "An error unrelated to Jikan happened while making the request: " +

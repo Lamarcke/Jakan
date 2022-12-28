@@ -96,4 +96,19 @@ describe("JakanMisc", () => {
         expect(seasonList).toHaveProperty("data");
         expect(seasonList.data.length).toBeGreaterThan(0);
     });
+    // reviews endpoints are currently returning a 500 error.
+    // test("should return anime reviews", async () => {
+    //     const jakan = new Jakan();
+    //     const misc = jakan.withMemory().forMisc();
+    //     const reviews = await misc.reviews("anime");
+    //     expect(reviews).toHaveProperty("data");
+    //     expect(reviews.data.length).toBeGreaterThan(0);
+    // });
+    test("should return anime genres", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const genres = await misc.genres("anime");
+        expect(genres).toHaveProperty("data");
+        expect(genres.data.length).toBeGreaterThan(0);
+    });
 });

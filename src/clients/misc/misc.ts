@@ -20,6 +20,7 @@ import {
     RecommendationsTargetOptions,
     TopRequestOptions,
 } from "./miscConstants";
+import { AxiosError } from "axios";
 
 /*
  * TODO:
@@ -57,8 +58,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanIDResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -84,8 +85,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -101,8 +102,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -112,15 +113,15 @@ class JakanMisc extends JakanClient {
         }
     }
 
-    async genres(media: "anime" | "manga", query?: GenresQuery){
+    async genres(media: "anime" | "manga", query?: GenresQuery) {
         const endpointBase = `genres/${media}`;
         const request = this.prepareQueryRequest(endpointBase, query);
         try {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -141,8 +142,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -160,8 +161,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -187,8 +188,8 @@ class JakanMisc extends JakanClient {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -226,8 +227,8 @@ class JakanMisc extends JakanClient {
             >(request);
             return get;
         } catch (e: unknown) {
-            if (e instanceof JakanError) {
-                throw new JakanMiscError(e.message);
+            if (e instanceof AxiosError) {
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
