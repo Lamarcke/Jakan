@@ -17,7 +17,7 @@ What can you expect?
     This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to Jikan/MAL.  
     `Powered by axios-cache-interceptor`
 
--   Platform-agnostic:
+-   Platform-agnostic:  
     We use Parcel and Babel to build the library with support for most browsers and node environments.
     This includes automatic polyfills and compatibility with CommonJS and ESM.
     We are also limiting ourselves to ES5 syntax for maximum compatibility.
@@ -27,7 +27,7 @@ What can you expect?
     (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
     Results are also mapped.
 
--   Javascript available
+-   Javascript available  
     You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`.
     Even with plain JS, some editors are able to check this file and show some basic type hinting.
     We still highly recommend using Typescript for the extra goodies. ;)
