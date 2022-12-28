@@ -46,10 +46,17 @@ describe("JakanMisc", () => {
         expect(top).toHaveProperty("data");
         expect(top.data.length).toBeGreaterThan(0);
     });
+    test("should return all schedules", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const schedule = await misc.schedules();
+        expect(schedule).toHaveProperty("data");
+        expect(schedule.data.length).toBeGreaterThan(0);
+    });
     test("should return schedule based on query", async () => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
-        const schedule = await misc.schedule({
+        const schedule = await misc.schedules({
             filter: "monday",
             page: 1,
         });

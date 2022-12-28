@@ -41,7 +41,9 @@ What can you expect?
 or  
 `yarn add jakan`
 
-## THE 1.0.0 UPDATE
+## Breaking changes on 1.0.0
+
+This is only relevant if you were using this library before `1.0.0`.
 
 Starting from version `1.0`, a small change will happen on how the builder process for the Jakan class is done. The
 change is pretty simple:  
@@ -82,7 +84,7 @@ Then, choose a cache provider. You can use a memory cache or the WebStorage API 
 
 ```typescript
 import {Jakan} from "jakan";
-const jakan = new Jakan().forSearch().withMemory()
+const jakan = new Jakan().withMemory().forSearch()
 
 // Now you just need to use the methods of the client you choose.
 jakan.anime("Naruto").then(...) // async/await syntax works too.
@@ -94,6 +96,39 @@ jakan.anime(1)
 // PS: extraInfo (second parameter) is an enum, you may know the available values by pressing CMD + Space (show auto-complete) in your editor.
 jakan.anime(1, "characters")
 // etc...
+```
+
+**JakanMisc**  
+```typescript
+import Jakan from "jakan"
+
+// Build a JakanMisc client
+const miscClient = new Jakan().withMemory().forMisc()
+
+// See page two of top animes
+const top = await miscClient.top("anime", {
+    page: 2
+})
+
+// Get a random manga
+const random = await miscClient.random("manga")
+
+// Get schedule for monday
+const schedule = await miscClient.schedule({
+    filter: "monday"
+})
+
+// Get all schedules
+const schedule = await miscClient.schedule()
+
+const usersClient = new Jakan().withMemory().forUsers()
+
+// See a user's profile
+const user = await usersClient.users("Lamarco")
+
+// Search for a user
+const user = await usersClient.usersSearch("Lamarco")
+
 ```
 
 ### Where are my types?
@@ -117,18 +152,7 @@ const myQuery: MangaSearchParameters = {
 jakan.anime(myQuery).then();
 ```
 
-Note: all enums are exported as types, so you may only use their values as reference. Again, just press CTRL + Space and
-you will get the available values.
 
-If you editor is not recognizing the type of client you are building, simply import it's type and use it as a type
-parameter in the respective `withXXXX` method.
-e.g.:
-
-```typescript
-import { Jakan, JakanSearch } from "jakan";
-
-const jakan = Jakan().forSearch().withMemory<JakanSearch>();
-```
 
 This will make the editor/typescript language server understand that you are building a `JakanSearch` client.  
 You can also import and use `JakanMisc` and `JakanUsers`.

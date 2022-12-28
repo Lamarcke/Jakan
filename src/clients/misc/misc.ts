@@ -152,7 +152,7 @@ class JakanMisc extends JakanClient {
         }
     }
 
-    async schedule(query: ScheduleQuery): Promise<JakanQueryResponse> {
+    async schedules(query?: ScheduleQuery): Promise<JakanQueryResponse> {
         const endpointBase = "schedules";
         const request = this.prepareQueryRequest(endpointBase, query);
 
