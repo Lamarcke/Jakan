@@ -167,8 +167,10 @@ Still, LSP-based editors (like VS Code) and IDEs should be able to instrospect t
 
 ### Project status
 
-This library is not finished yet. We are mapping all endpoints manually, so it takes some time.  
-PRs are very welcome.
+This library is currently in a finished state, and future updates will be mostly for bug fixes and for breaking Jikan API changes.  
+
+Still, we need some help to map the Jikan API responses, since it takes a lot of time and is a very manual process.  
+Please open an issue or make a PR if you want to contribute. Thanks!  
 
 ## Clients
 
