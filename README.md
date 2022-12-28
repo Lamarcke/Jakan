@@ -18,8 +18,8 @@ What can you expect?
     `Powered by axios-cache-interceptor`
 
 -   Platform-agnostic:  
-    We use Parcel and Babel to build the library with support for most browsers and node environments.
-    This includes automatic polyfills and compatibility with CommonJS and ESM.
+    We use Parcel to build the library with support for most browsers and node environments.
+    This includes compatibility with CommonJS, and ESM.
     We are also limiting ourselves to ES5 syntax for maximum compatibility.
 
 -   Typescript first  
