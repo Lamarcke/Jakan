@@ -6,27 +6,17 @@ import JakanMisc from "./clients/misc/misc";
 import { RedisClientType } from "redis";
 
 import JakanUsers from "./clients/users/users";
+import { type } from "os";
 
 class JakanClientBuilder implements JakanBuilder {
-    private redisClient: RedisClientType | undefined = undefined;
+    private redisClient: RedisClientType | undefined;
     private cacheAge: number = 15 * 60 * 1000;
-    private forage: any | undefined;
+    private forage: unknown | undefined;
     private webStorage: Storage | undefined;
-    // Use BuilderTargets enum to access this object keys.
-    private builderTarget: BuilderTargets;
-    private _clientID?: string;
+    private builderTarget: BuilderTargets | undefined;
 
-    constructor() {
-        this.builderTarget = BuilderTargets.undefined;
-    }
-
-    setForUsers(clientID: string): JakanClientBuilder {
-        if (clientID) {
-            this.builderTarget = BuilderTargets.users;
-            this._clientID = clientID;
-        } else {
-            throw new JakanBuilderError("No clientID specified.");
-        }
+    setForUsers(): JakanClientBuilder {
+        this.builderTarget = BuilderTargets.users;
         return this;
     }
 
@@ -41,21 +31,39 @@ class JakanClientBuilder implements JakanBuilder {
     }
 
     setCacheAge(maxAge: number): JakanBuilder {
-        this.cacheAge = maxAge;
+        if (typeof maxAge === "number") {
+            this.cacheAge = maxAge;
+        }
+
         return this;
     }
 
     setRedis(redis: RedisClientType): JakanBuilder {
+        if (redis == undefined) {
+            throw new JakanBuilderError(
+                "Redis instance is undefined. Aborting to avoid cache errors."
+            );
+        }
         this.redisClient = redis;
         return this;
     }
 
-    setWebStorage(value: Storage) {
-        this.webStorage = value;
+    setWebStorage(webStorage: Storage) {
+        if (webStorage == undefined) {
+            throw new JakanBuilderError(
+                "WebStorage instance is undefined. Aborting to avoid cache errors."
+            );
+        }
+        this.webStorage = webStorage;
     }
 
-    setForage(value: any) {
-        this.forage = value;
+    setForage(forage: unknown) {
+        if (forage == undefined) {
+            throw new JakanBuilderError(
+                "Forage instance is undefined. Aborting to avoid cache errors."
+            );
+        }
+        this.forage = forage;
     }
 
     // Builds the JikanClient based on specified values. All clients inherit from JikanClient.
@@ -67,6 +75,8 @@ class JakanClientBuilder implements JakanBuilder {
         } else if (this.builderTarget === BuilderTargets.misc) {
             instance = new JakanMisc();
         } else if (this.builderTarget === BuilderTargets.users) {
+            // Disable cache for the user client.
+            this.cacheAge = 0;
             instance = new JakanUsers();
         } else {
             throw new JakanBuilderError("No build target selected");

@@ -91,6 +91,13 @@ class JakanClient {
     private _buildAxios(): void {
         const baseAxios = axios.create({ baseURL: this.baseURL });
         let storage: AxiosStorage;
+
+        // Disables caching if cacheAge is 0 or undefined.
+        if (this.cacheAge == undefined || this.cacheAge === 0) {
+            this.axiosInstance = baseAxios;
+            return;
+        }
+
         if (this.redisClient) {
             storage = this._buildRedisStorage();
         } else if (this.forage) {
@@ -101,7 +108,10 @@ class JakanClient {
             storage = buildMemoryStorage();
         }
 
-        this.axiosInstance = setupCache(baseAxios, { storage: storage });
+        this.axiosInstance = setupCache(baseAxios, {
+            storage: storage,
+            ttl: this.cacheAge,
+        });
     }
 
     /*
@@ -134,6 +144,7 @@ class JakanClient {
                 request = request + toAppendToRequest;
             });
         } else if (query != undefined && typeof query === "string") {
+            // If the query is a string, we assume it's to be used with the "q=" parameter.
             request = request + `q=${query}`;
         } else {
             throw new JakanError(
@@ -143,12 +154,12 @@ class JakanClient {
         return request;
     }
     /*
-     * Builds the query string for id requests.
-     * Used in endpoints like "anime/1", "manga/1" or "anime/1/episodes".
+     * Builds the query string for info requests.
+     * Used in endpoints like "anime/1", "manga/1", "anime/1/episodes" or "users/{username}/full".
      */
-    idRequestBuilder(
+    infoRequestBuilder(
         endpointBase: string,
-        id: number,
+        id: number | string,
         extraInfo?: string
     ): string {
         if (typeof extraInfo === "string") {
@@ -194,8 +205,7 @@ class JakanClient {
     defineSettings(
         cacheAge?: number,
         redisClient?: RedisClientType,
-        // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
-        forage?: any,
+        forage?: unknown,
         webStorage?: Storage
     ): void {
         this.cacheAge = cacheAge;

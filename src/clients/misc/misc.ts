@@ -3,7 +3,6 @@ import { BASE_JIKAN_URL } from "../../constants";
 import {
     JakanIDResponse,
     JakanQueryResponse,
-    JakanSeasonListResponse,
 } from "../../response/responseTypes";
 import {
     GenresQuery,
@@ -59,7 +58,7 @@ class JakanMisc extends JakanClient {
             return get;
         } catch (e: unknown) {
             if (e instanceof AxiosError) {
-                throw e
+                throw e;
             } else {
                 throw new JakanMiscError(
                     "An error unrelated to Jikan happened while making the request: " +
@@ -199,19 +198,18 @@ class JakanMisc extends JakanClient {
         }
     }
     /*
-     * This function is a bit different from the others, mainly because the
-     * /seasons endpoint is one of the few that have "data" as an array, but has no pagination info.
+     * The /seasons endpoint is one of the few that have "data" as an array, but no pagination info.
      */
     seasonList(
         when: SeasonListRequestWhen,
         query: SeasonListQuery
     ): Promise<JakanQueryResponse>;
     seasonList(when: SeasonListRequestWhen): Promise<JakanQueryResponse>;
-    seasonList(): Promise<JakanSeasonListResponse>;
+    seasonList(): Promise<JakanQueryResponse>;
     async seasonList(
         when?: SeasonListRequestWhen,
         query?: SeasonListQuery
-    ): Promise<JakanQueryResponse | JakanSeasonListResponse> {
+    ): Promise<JakanQueryResponse> {
         let request = "";
         if (when != undefined && typeof when == "string") {
             const endpointBase = `seasons/${when}`;
@@ -222,9 +220,7 @@ class JakanMisc extends JakanClient {
         }
 
         try {
-            const get = await this.makeRequest<
-                JakanQueryResponse | JakanSeasonListResponse
-            >(request);
+            const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
         } catch (e: unknown) {
             if (e instanceof AxiosError) {

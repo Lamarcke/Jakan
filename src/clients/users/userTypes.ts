@@ -1,5 +1,15 @@
-import { UserExtraInfoOptions } from "./userConstants";
+import { UsersExtraInfoOptions, UsersGenders } from "./userConstants";
 
-type UserExtraInfo = keyof typeof UserExtraInfoOptions;
+interface UsersQuery {
+    q: string;
+    limit?: number;
+    page?: number;
+    gender?: keyof typeof UsersGenders;
+    location?: string;
+    minAge?: number;
+    maxAge?: number;
+}
 
-export type { UserExtraInfo };
+type UsersExtraInfo = keyof typeof UsersExtraInfoOptions;
+
+export type { UsersExtraInfo, UsersQuery };
