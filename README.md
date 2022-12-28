@@ -186,7 +186,7 @@ Internally, this will make the client use a pure `axios` instance. Without the `
 
 If you are having problems related to `axios-cache-interceptor`, try setting `cacheAge` to `0` and opening an issue in this repo.
 
-The `JakanUsers` client has cache disabled by default. You can still enalbe it by setting a custom `cacheAge`.
+The `JakanUsers` client has cache disabled by default. You can still enable it by setting a custom `cacheAge`.
 
 ## Project status
 
