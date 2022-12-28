@@ -18,7 +18,7 @@ What can you expect?
     `Powered by axios-cache-interceptor`
 
 -   Platform-agnostic:
-    We use Parcel and Babel to build the library with support for most browsers and node environments. 
+    We use Parcel and Babel to build the library with support for most browsers and node environments.
     This includes automatic polyfills and compatibility with CommonJS and ESM.
     We are also limiting ourselves to ES5 syntax for maximum compatibility.
 
@@ -28,8 +28,8 @@ What can you expect?
     Results are also mapped.
 
 -   Javascript available
-    You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`. 
-    Even with plain JS, some editors are able to check this file and show some basic type hinting. 
+    You can also use this library with plain javascript. Our build code is just a Javascript file with a `index.d.ts`.
+    Even with plain JS, some editors are able to check this file and show some basic type hinting.
     We still highly recommend using Typescript for the extra goodies. ;)
 
 -   As simple as it gets  
@@ -149,7 +149,7 @@ PRs are very welcome.
 ## Clients
 
 -   [x] JakanSearch
--   [] JakanMisc
+-   [x] JakanMisc
 -   [x] JakanUsers
 
 ### JakanSearch
@@ -163,14 +163,12 @@ Client for search related requests.
 
 ### JakanMisc
 
-Client for everything not search-related. Like recommendations, top, etc.
-
-To be implemented.
+Client for everything not related to main media requests. Like recommendations, top, schedules etc.
 
 ### JakanUsers
 
 Client for interacting with MAL's public user endpoints.
-Only public endpoints may be used.
+Only public endpoints are available.
 
 -   [x] User anime list
 -   [x] User manga list
