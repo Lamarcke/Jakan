@@ -188,7 +188,7 @@ Client for search related requests.
 
 -   [x] Anime
 -   [x] Manga
--   [x] Characters
+-   [x] Characterse
 -   [x] People
 
 Low priority methods that may be implemented in the future:
@@ -199,6 +199,14 @@ Low priority methods that may be implemented in the future:
 ### JakanMisc
 
 Client for everything not related to main media requests. Like recommendations, top, schedules etc.
+
+-   [x] Random
+-   [x] Top
+-   [x] Recommendations
+-   [x] Reviews
+-   [x] Genres
+-   [x] Schedules
+-   [x] Season
 
 ### JakanUsers
 
