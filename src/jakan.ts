@@ -38,10 +38,10 @@ class Jakan {
         return this.builder.build<JakanMisc>();
     }
 
-    // Returns a JakanUsers client. Won't cache requests.
+    // Returns a JakanUsers client.
     // You need to register an ClientID to use this. Please check Jakan README for more info.
-    forUsers(clientID: string): JakanUsers {
-        this.builder.setForUsers(clientID);
+    forUsers(): JakanUsers {
+        this.builder.setForUsers();
         return this.builder.build<JakanUsers>();
     }
 

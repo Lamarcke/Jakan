@@ -116,7 +116,7 @@ type SearchRequestParameters =
  * This type determines which type of extra info is being used by a function.
  *
  */
-type ExtraInfo<
+type SearchExtraInfo<
     T extends SearchRequestExtraInfo | string = SearchRequestExtraInfo
 > = SearchRequestExtraInfo | string | T;
 
@@ -124,15 +124,13 @@ type ExtraInfo<
  * Type to determine if a search function is using query parameters (string | object) or a id (number).
  * Defaults to string if no type is specified.
  */
-type QueryOrId<T extends SearchRequestParameters | number | string = string> =
-    | SearchRequestParameters
-    | number
-    | string
-    | T;
+type SearchQueryOrId<
+    T extends SearchRequestParameters | number | string = string
+> = SearchRequestParameters | number | string | T;
 
 export type {
-    QueryOrId,
-    ExtraInfo,
+    SearchQueryOrId,
+    SearchExtraInfo,
     SearchRequestParameters,
     SearchRequestExtraInfo,
     AnimeSearchParameters,

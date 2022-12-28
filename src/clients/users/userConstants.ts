@@ -1,8 +1,8 @@
-enum UserExtraInfoOptions {
+enum UsersExtraInfoOptions {
     full = "full",
     statistics = "statistics",
     favorites = "favorites",
-    userupdates = "userupdates",
+    userUpdates = "userupdates",
     about = "about",
     history = "history",
     clubs = "clubs",
@@ -12,4 +12,11 @@ enum UserExtraInfoOptions {
     external = "external",
 }
 
-export type { UserExtraInfoOptions };
+enum UsersGenders {
+    any = "any",
+    male = "male",
+    female = "female",
+    nonbinary = "nonbinary",
+}
+
+export type { UsersExtraInfoOptions, UsersGenders };

@@ -1,6 +1,6 @@
 import JakanClient from "../base";
 import {
-    QueryOrId,
+    SearchQueryOrId,
     AnimeSearchParameters,
     CharacterSearchParameters,
     PeopleSearchParameters,
@@ -9,7 +9,7 @@ import {
     MangaSearchParameters,
     ExtraCharactersInfo,
     ExtraPeopleInfo,
-    ExtraInfo,
+    SearchExtraInfo,
 } from "./searchTypes";
 import {
     JakanIDResponse,
@@ -36,7 +36,7 @@ class JakanSearch extends JakanClient {
     anime(query: string): Promise<JakanQueryResponse>;
     // Searches for an anime using either an id, a query, or a set of parameters.
     async anime(
-        queryOrId: QueryOrId<AnimeSearchParameters>,
+        queryOrId: SearchQueryOrId<AnimeSearchParameters>,
         extraInfo?: ExtraAnimeInfo
     ): Promise<JakanIDResponse | JakanQueryResponse> {
         return await this.prepareRequest<AnimeSearchParameters, ExtraAnimeInfo>(
@@ -52,7 +52,7 @@ class JakanSearch extends JakanClient {
     manga(query: string): Promise<JakanQueryResponse>;
     // Searches for a manga using either an id, a query, or a set of parameters.
     async manga(
-        queryOrId: QueryOrId<MangaSearchParameters>,
+        queryOrId: SearchQueryOrId<MangaSearchParameters>,
         extraInfo?: ExtraMangaInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
         return await this.prepareRequest<MangaSearchParameters, ExtraMangaInfo>(
@@ -70,7 +70,7 @@ class JakanSearch extends JakanClient {
     characters(id: number): Promise<JakanIDResponse>;
     characters(query: string): Promise<JakanQueryResponse>;
     async characters(
-        queryOrId: QueryOrId<CharacterSearchParameters>,
+        queryOrId: SearchQueryOrId<CharacterSearchParameters>,
         extraInfo?: ExtraCharactersInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
         return await this.prepareRequest<
@@ -84,7 +84,7 @@ class JakanSearch extends JakanClient {
     people(id: number): Promise<JakanIDResponse>;
     people(query: string): Promise<JakanQueryResponse>;
     async people(
-        queryOrId: QueryOrId<PeopleSearchParameters>,
+        queryOrId: SearchQueryOrId<PeopleSearchParameters>,
         extraInfo?: ExtraPeopleInfo
     ): Promise<JakanQueryResponse | JakanIDResponse> {
         return await this.prepareRequest<
@@ -93,9 +93,12 @@ class JakanSearch extends JakanClient {
         >(SearchMediaOptions.people, queryOrId, extraInfo);
     }
 
-    private async prepareRequest<T extends QueryOrId, E extends ExtraInfo>(
+    private async prepareRequest<
+        T extends SearchQueryOrId,
+        E extends SearchExtraInfo
+    >(
         media: string,
-        queryOrId: QueryOrId<T>,
+        queryOrId: SearchQueryOrId<T>,
         extraInfo?: E
     ): Promise<JakanIDResponse | JakanQueryResponse> {
         if (typeof queryOrId === "number") {
@@ -116,16 +119,18 @@ class JakanSearch extends JakanClient {
         id: number,
         extraInfo?: string
     ): Promise<JakanIDResponse> {
-        const request = this.idRequestBuilder(media, id, extraInfo);
+        const request = this.infoRequestBuilder(media, id, extraInfo);
         return await this.makeRequest<JakanIDResponse>(request);
     }
 
-    private async withQuery<T extends QueryOrId>(
+    private async withQuery<T extends SearchQueryOrId>(
         media: string,
         query: T
     ): Promise<JakanQueryResponse> {
         if (typeof query === "number") {
-            throw new JakanSearchError("Can't");
+            throw new JakanSearchError(
+                "It's not possible to use IDs with query requests."
+            );
         }
         const request = this.queryRequestBuilder(media, query);
         return await this.makeRequest<JakanQueryResponse>(request);
