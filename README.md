@@ -98,37 +98,41 @@ jakan.anime(1, "characters")
 // etc...
 ```
 
-**JakanMisc**  
+**JakanMisc**
+
 ```typescript
-import Jakan from "jakan"
+import Jakan from "jakan";
 
 // Build a JakanMisc client
-const miscClient = new Jakan().withMemory().forMisc()
+const miscClient = new Jakan().withMemory().forMisc();
 
 // See page two of top animes
 const top = await miscClient.top("anime", {
-    page: 2
-})
+    page: 2,
+});
 
 // Get a random manga
-const random = await miscClient.random("manga")
+const random = await miscClient.random("manga");
 
 // Get schedule for monday
-const schedule = await miscClient.schedule({
-    filter: "monday"
-})
+const mondaySchedule = await miscClient.schedules({
+    filter: "monday",
+});
 
 // Get all schedules
-const schedule = await miscClient.schedule()
+const schedules = await miscClient.schedules();
+```
 
-const usersClient = new Jakan().withMemory().forUsers()
+```typescript
+import Jakan from "jakan";
+
+const usersClient = new Jakan().withMemory().forUsers();
 
 // See a user's profile
-const user = await usersClient.users("Lamarco")
+const user = await usersClient.users("Lamarco");
 
 // Search for a user
-const user = await usersClient.usersSearch("Lamarco")
-
+const user = await usersClient.usersSearch("Lamarco");
 ```
 
 ### Where are my types?
@@ -139,26 +143,22 @@ values for you.
 e.g.:
 
 ```typescript
-import { MangaSearchParameters, AnimeSearchParameters } from "jakan";
+import {
+    MangaSearchParameters,
+    AnimeSearchParameters,
+    ExtraAnimeInfo,
+} from "jakan";
 
 // You can preview the available values in fields marked as enum by pressing CTRL + SPACE (or equivalent) in your editor.
 const myQuery: MangaSearchParameters = {
     q: "Solo Leveling", // q stands for Query and is the only non-optional value.
     type: "manwha", // Type is an enum.
-    status: "", // Status is also an enum
+    status: "complete", // Status is also an enum
 };
 
 // This is the JakanSearch client we built above
 jakan.anime(myQuery).then();
 ```
-
-
-
-This will make the editor/typescript language server understand that you are building a `JakanSearch` client.  
-You can also import and use `JakanMisc` and `JakanUsers`.
-
-**PS**: This should only happen in versions prior to `1.0`. Make sure the build methods are being called in the correct
-order if you are on latter versions.
 
 ## Javascript usage
 
