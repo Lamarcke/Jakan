@@ -1,12 +1,32 @@
 import { AnimeMediaTypes, MangaMediaTypes } from "../search/searchConstants";
 import {
-    RecommendationsTargetOptions,
+    ScheduleRequestQueryFilter,
+    ScheduleRequestStringBooleans,
+    SeasonRequestFilter,
     TopRequestAnimeFilters,
     TopRequestFiltersBase,
     TopRequestMangaFilters,
 } from "./miscConstants";
 
 // This file contains the types for the miscellaneous endpoints.
+
+interface SeasonListQuery {
+    filter?: keyof typeof SeasonRequestFilter;
+    page: number;
+}
+
+interface SeasonQuery {
+    filter?: keyof typeof SeasonRequestFilter;
+    page?: number;
+}
+
+interface ScheduleQuery {
+    page?: number;
+    filter?: keyof typeof ScheduleRequestQueryFilter;
+    kids?: keyof typeof ScheduleRequestStringBooleans;
+    sfw?: keyof typeof ScheduleRequestStringBooleans;
+    limit?: number;
+}
 
 interface TopAnimeQueryOptions {
     type?: keyof typeof AnimeMediaTypes;
@@ -51,10 +71,6 @@ type TopRequestQuery =
     | TopPeopleQueryOptions
     | TopReviewsQueryOptions;
 
-type RecommendationsRequestQuery =
-    | RecommendationsQueryOptions
-    | keyof typeof RecommendationsTargetOptions;
-
 // Convert to enum with keyof typeof syntax if it ever grows too large.
 type RandomRequestOptions =
     | "anime"
@@ -63,11 +79,14 @@ type RandomRequestOptions =
     | "people"
     | "users";
 
-type MiscRequestParameters = RecommendationsRequestQuery | string;
+type SeasonListRequestWhen = "now" | "upcoming";
 
 export type {
-    MiscRequestParameters,
     RandomRequestOptions,
-    RecommendationsRequestQuery,
+    RecommendationsQueryOptions,
     TopRequestQuery,
+    ScheduleQuery,
+    SeasonQuery,
+    SeasonListRequestWhen,
+    SeasonListQuery,
 };

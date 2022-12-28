@@ -11,7 +11,7 @@ import { RedisClientType } from "redis";
 import { JakanError, JakanSettingsError } from "../exceptions";
 import { isBrowser, isNode } from "browser-or-node";
 import axios, { Axios } from "axios";
-import { JakanRequestParameters, JakanResponse } from "../constants";
+import { JakanResponse } from "../constants";
 
 // This class is responsible for settings up the methods that create a valid axios instance.
 class JakanClient {
@@ -19,7 +19,7 @@ class JakanClient {
     private cacheAge: number | undefined;
     private redisClient: RedisClientType | undefined;
     // trunk-ignore(eslint/@typescript-eslint/no-explicit-any)
-    private forage: any | undefined;
+    private forage: unknown | undefined;
     private webStorage: Storage | undefined;
     protected axiosInstance!: Axios;
 
@@ -122,23 +122,18 @@ class JakanClient {
      * @example
      * queryRequestBuilder("anime", { q: "naruto" });
      * // Returns "anime?q=naruto"
-     * queryRequestBuilder("anime", { q: "naruto", page: 2 });
+     * queryRequestBuilder("manga", { q: "naruto", page: 2 });
      * // Returns "anime?q=naruto&page=2"
-     * queryRequestBuilder("anime", { id: 1 });
-     * // Returns "anime/1"
      */
-    queryRequestBuilder(
-        endpointBase: string,
-        query: JakanRequestParameters
-    ): string {
+    queryRequestBuilder(endpointBase: string, query: string | object): string {
         let request = `${endpointBase}?`;
-        if (typeof query === "object") {
+        if (query != undefined && typeof query === "object") {
             Object.entries(query).forEach(([key, value], index) => {
                 const toAppendToRequest =
                     index === 0 ? `${key}=${value}` : `&${key}=${value}`;
                 request = request + toAppendToRequest;
             });
-        } else if (typeof query === "string") {
+        } else if (query != undefined && typeof query === "string") {
             request = request + `q=${query}`;
         } else {
             throw new JakanError(

@@ -1,3 +1,30 @@
+enum SeasonRequestFilter {
+    tv = "tv",
+    ova = "ova",
+    movie = "movie",
+    special = "special",
+    ona = "ona",
+    music = "music",
+}
+
+enum ScheduleRequestQueryFilter {
+    monday = "monday",
+    tuesday = "tuesday",
+    wednesday = "wednesday",
+    thursday = "thursday",
+    friday = "friday",
+    unknow = "unknow",
+    other = "other",
+}
+/*
+ * Used in schedule query parameters that require a "bool" value.
+ * Since they are query parameters, they are in fact just strings.
+ */
+enum ScheduleRequestStringBooleans {
+    true = "true",
+    false = "false",
+}
+
 enum TopRequestFiltersBase {
     upcoming = "upcoming",
     bypopularity = "bypopularity",
@@ -41,4 +68,7 @@ export type {
     TopRequestAnimeFilters,
     TopRequestMangaFilters,
     TopRequestOptions,
+    ScheduleRequestQueryFilter,
+    ScheduleRequestStringBooleans,
+    SeasonRequestFilter,
 };

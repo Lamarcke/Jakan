@@ -18,7 +18,7 @@ describe("JakanMisc", () => {
         const misc = jakan.withMemory().forMisc();
         const recommendations = await misc.recommendations("anime");
         expect(recommendations).toHaveProperty("data");
-        expect(recommendations.data).toBeGreaterThan(0);
+        expect(recommendations.data.length).toBeGreaterThan(0);
     });
     test("should return recent anime recommendations with query", async () => {
         const jakan = new Jakan();
@@ -36,7 +36,7 @@ describe("JakanMisc", () => {
         expect(top).toHaveProperty("data");
         expect(top.data.length).toBeGreaterThan(0);
     });
-    test("should return top anime with query", async () => {
+    test("should return top anime ovas with query", async () => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
         const top = await misc.top("anime", {
@@ -45,5 +45,55 @@ describe("JakanMisc", () => {
         });
         expect(top).toHaveProperty("data");
         expect(top.data.length).toBeGreaterThan(0);
+    });
+    test("should return schedule based on query", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const schedule = await misc.schedule({
+            filter: "monday",
+            page: 1,
+        });
+        expect(schedule).toHaveProperty("data");
+        expect(schedule.data.length).toBeGreaterThan(0);
+    });
+    test("should return season based on year and season parameters", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const season = await misc.season(2020, "summer");
+        expect(season).toHaveProperty("data");
+        expect(season.data.length).toBeGreaterThan(0);
+    });
+    test("should return season based on year, season and query parameters", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const season = await misc.season(2020, "summer", {
+            page: 2,
+        });
+        expect(season).toHaveProperty("data");
+        expect(season.data.length).toBeGreaterThan(0);
+    });
+    test("should return season list", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const seasonList = await misc.seasonList();
+        expect(seasonList).toHaveProperty("data");
+        expect(seasonList.data.length).toBeGreaterThan(0);
+    });
+    test("should return current season list based on when", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const seasonList = await misc.seasonList("now");
+        expect(seasonList).toHaveProperty("data");
+        expect(seasonList.data.length).toBeGreaterThan(0);
+    });
+    test("should return upcoming season list based on when and query", async () => {
+        const jakan = new Jakan();
+        const misc = jakan.withMemory().forMisc();
+        const seasonList = await misc.seasonList("upcoming", {
+            filter: "tv",
+            page: 2,
+        });
+        expect(seasonList).toHaveProperty("data");
+        expect(seasonList.data.length).toBeGreaterThan(0);
     });
 });

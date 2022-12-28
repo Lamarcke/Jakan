@@ -5,7 +5,6 @@ import JakanMisc from "./clients/misc/misc";
 import JakanSearch from "./clients/search/search";
 import JakanUsers from "./clients/users/users";
 import { JakanBuilderError } from "./exceptions";
-import { BuilderTargets } from "./generalTypes";
 
 /*
  * Jakan is the main class of the library.
