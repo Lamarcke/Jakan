@@ -82,6 +82,8 @@ Choosing a client is simple, just use the respective `.for'Client'()` (where `'C
 Jakan.  
 Then, choose a cache provider. You can use a memory cache or the WebStorage API for a quickstart.
 
+**JakanSearch**
+
 ```typescript
 import {Jakan} from "jakan";
 const jakan = new Jakan().withMemory().forSearch()
@@ -122,6 +124,8 @@ const mondaySchedule = await miscClient.schedules({
 // Get all schedules
 const schedules = await miscClient.schedules();
 ```
+
+**JakanUsers**
 
 ```typescript
 import Jakan from "jakan";
@@ -165,12 +169,12 @@ jakan.anime(myQuery).then();
 The library works the same when using plain Javascript. You just won't get the Typescript goodies.
 Still, LSP-based editors (like VS Code) and IDEs should be able to instrospect the `index.d.ts` file and provide you with some basic type hinting.
 
-### Project status
+## Project status
 
-This library is currently in a finished state, and future updates will be mostly for bug fixes and for breaking Jikan API changes.  
+This library is currently in a finished state, and future updates will be mostly for bug fixes and for breaking Jikan API changes.
 
 Still, we need some help to map the Jikan API responses, since it takes a lot of time and is a very manual process.  
-Please open an issue or make a PR if you want to contribute. Thanks!  
+Please open an issue or make a PR if you want to contribute. Thanks!
 
 ## Clients
 
