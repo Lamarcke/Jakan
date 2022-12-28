@@ -191,29 +191,21 @@ Client for search related requests.
 -   [x] Characters
 -   [x] People
 
+Low priority methods that may be implemented in the future:
+
+-   [ ] Producers
+-   [ ] Clubs
+
 ### JakanMisc
 
 Client for everything not related to main media requests. Like recommendations, top, schedules etc.
 
 ### JakanUsers
 
-Client for interacting with MAL's public user endpoints.
-Only public endpoints are available.
+Client for interacting with Jikan Users' endpoints.
 
--   [x] User anime list
--   [x] User manga list
-
-**Why so simple?**
-
-Using the MAL API for this library is rather troublesome, most endpoints are protected, and you would need to setup complex OAuth2 authentication flows to be able to use them with this library.
-
-So, rather than getting in the way of the custom code you would have to build anyway, we prefer to have only the most used public endpoints available. You still need to provide a `clientID` for this to work.
-
-A refactoring to use Jikan V4 API's own user endpoints is on the works, and will be one of the milestones for 1.0.
-Once it's out, this README will be updated.
-
-If you want to use the protected MAL API's endpoints, this guide will probably help you:  
-[How To Fetch User Lists From The Official MyAnimeList API](https://docs.google.com/document/d/1-6H-agSnqa8Mfmw802UYfGQrceIEnAaEh4uCXAPiX5A/edit#heading=h.pgt2v0q492o3)
+-   [x] Users profile, including statistics, history, etc.
+-   [x] Users search
 
 ## Thanks
 
