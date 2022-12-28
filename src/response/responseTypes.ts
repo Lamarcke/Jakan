@@ -1,7 +1,10 @@
 import JakanSearch from "../clients/search/search";
 
+// A generic map for the "data" field of Jikan request responses.
 interface JakanData {
-    [key: string]: any;
+    // TODO: Map each request individually.
+    // This will, of course, take a really long time.
+    [key: string]: unknown;
     mal_id: number;
 }
 
@@ -17,14 +20,18 @@ type JakanPagination = {
     items: JakanPaginationItems;
 };
 
+interface JakanSeasonListResponse {
+    data: [];
+}
+
 type JakanQueryResponse = {
-    pagination: JakanPagination;
     data: JakanData[];
+    pagination: JakanPagination;
 };
 
 type JakanIDResponse = {
-    pagination: JakanPagination;
     data: JakanData;
+    pagination: JakanPagination;
 };
 
-export type { JakanQueryResponse, JakanIDResponse };
+export type { JakanQueryResponse, JakanIDResponse, JakanSeasonListResponse };

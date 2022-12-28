@@ -67,10 +67,7 @@ class JakanClientBuilder implements JakanBuilder {
         } else if (this.builderTarget === BuilderTargets.misc) {
             instance = new JakanMisc();
         } else if (this.builderTarget === BuilderTargets.users) {
-            if (this._clientID == undefined) {
-                throw new JakanBuilderError("No clientID specified.");
-            }
-            instance = new JakanUsers(this._clientID);
+            instance = new JakanUsers();
         } else {
             throw new JakanBuilderError("No build target selected");
         }

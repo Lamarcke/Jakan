@@ -1,24 +1,5 @@
-interface JakanUsersDataNode {
-    id: number;
-    title: string;
-    main_picture: {
-        medium: string;
-        large: string;
-    };
-}
+import { UserExtraInfoOptions } from "./userConstants";
 
-interface JakanUsersPaging {
-    // A string with the url for the next page on this user's list.
-    next: string;
-}
+type UserExtraInfo = keyof typeof UserExtraInfoOptions;
 
-type JakanUsersData = {
-    node: JakanUsersDataNode;
-}[];
-
-type JakanUsersResponse = {
-    data: JakanUsersData;
-    paging: JakanUsersPaging;
-};
-
-export default JakanUsersResponse;
+export type { UserExtraInfo };

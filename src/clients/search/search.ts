@@ -19,6 +19,12 @@ import { JakanSearchError } from "../../exceptions";
 import { SearchMediaOptions } from "./searchConstants";
 import { BASE_JIKAN_URL } from "../../constants";
 
+/*
+ * Add support for the following endpoints:
+ * - [ ] /clubs
+ * - [ ] /producers
+ */
+
 class JakanSearch extends JakanClient {
     constructor() {
         super(BASE_JIKAN_URL);
