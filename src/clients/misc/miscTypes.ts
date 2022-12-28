@@ -1,5 +1,6 @@
 import { AnimeMediaTypes, MangaMediaTypes } from "../search/searchConstants";
 import {
+    GenresRequestFilter,
     ScheduleRequestQueryFilter,
     ScheduleRequestStringBooleans,
     SeasonRequestFilter,
@@ -9,6 +10,10 @@ import {
 } from "./miscConstants";
 
 // This file contains the types for the miscellaneous endpoints.
+
+interface GenresQuery {
+    filter?: keyof typeof GenresRequestFilter;
+}
 
 interface SeasonListQuery {
     filter?: keyof typeof SeasonRequestFilter;
@@ -89,4 +94,5 @@ export type {
     SeasonQuery,
     SeasonListRequestWhen,
     SeasonListQuery,
+    GenresQuery,
 };

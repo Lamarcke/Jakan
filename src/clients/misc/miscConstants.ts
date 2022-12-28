@@ -1,3 +1,10 @@
+enum GenresRequestFilter {
+    genres = "genres",
+    explictGenres = "explict_genres",
+    themes = "themes",
+    demographics = "demographics",
+}
+
 enum SeasonRequestFilter {
     tv = "tv",
     ova = "ova",
@@ -71,4 +78,5 @@ export type {
     ScheduleRequestQueryFilter,
     ScheduleRequestStringBooleans,
     SeasonRequestFilter,
+    GenresRequestFilter,
 };

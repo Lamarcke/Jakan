@@ -6,6 +6,7 @@ import {
     JakanSeasonListResponse,
 } from "../../response/responseTypes";
 import {
+    GenresQuery,
     RandomRequestOptions,
     RecommendationsQueryOptions,
     ScheduleQuery,
@@ -96,6 +97,24 @@ class JakanMisc extends JakanClient {
 
     async reviews(media: "anime" | "manga"): Promise<JakanQueryResponse> {
         const request = `reviews/${media}`;
+        try {
+            const get = await this.makeRequest<JakanQueryResponse>(request);
+            return get;
+        } catch (e: unknown) {
+            if (e instanceof JakanError) {
+                throw new JakanMiscError(e.message);
+            } else {
+                throw new JakanMiscError(
+                    "An error unrelated to Jikan happened while making the request: " +
+                        e
+                );
+            }
+        }
+    }
+
+    async genres(media: "anime" | "manga", query?: GenresQuery){
+        const endpointBase = `genres/${media}`;
+        const request = this.prepareQueryRequest(endpointBase, query);
         try {
             const get = await this.makeRequest<JakanQueryResponse>(request);
             return get;
