@@ -54,7 +54,7 @@ instead of:
 
 The main reason for this change is described in this [issue](https://github.com/Lamarcke/Jakan/issues/2).
 
-When this happens, this README will be updated acorddingly, you can be sure that the code present in the quickstart
+When this happens, this README will be updated accordingly, you can be sure that the code present in the quickstart
 guides below are the correct way.
 
 If you have a service built on top of this project, and don't want to update now, you can pin the `0.9` branch from this
@@ -169,6 +169,25 @@ jakan.anime(myQuery).then();
 The library works the same when using plain Javascript. You just won't get the Typescript goodies.
 Still, LSP-based editors (like VS Code) and IDEs should be able to instrospect the `index.d.ts` file and provide you with some basic type hinting.
 
+## Cache
+
+Along with the cache provider, you can also set a custom cache age/TTL.
+
+PS: `cacheAge` should be in milliseconds.
+
+```typescript
+const jakan = new Jakan();
+// cacheAge is available on all clients' with'Provider' methods.
+const clientWithoutCache = jakan.withMemory(5000);
+```
+
+You can opt-out of `axios-cache-interceptor`'s cache by using a `cacheAge` of `0` when creating client classes.  
+Internally, this will make the client use a pure `axios` instance. Without the `axios-cache-interceptor` adapter.
+
+If you are having problems related to `axios-cache-interceptor`, try setting `cacheAge` to `0` and opening an issue in this repo.
+
+The `JakanUsers` client has cache disabled by default. You can still enalbe it by setting a custom `cacheAge`.
+
 ## Project status
 
 This library is currently in a finished state, and future updates will be mostly for bug fixes and for breaking Jikan API changes.
@@ -198,7 +217,7 @@ Low priority methods that may be implemented in the future:
 
 ### JakanMisc
 
-Client for everything not related to main media requests. Like recommendations, top, schedules etc.
+Client for everything not related to the main media requests. Like recommendations, top, schedules etc.
 
 -   [x] Random
 -   [x] Top

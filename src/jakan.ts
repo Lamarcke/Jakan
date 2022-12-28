@@ -15,6 +15,9 @@ import { JakanBuilderError } from "./exceptions";
 
 class Jakan {
     private builder: JakanClientBuilder;
+    // Keeps track of whether the user has set a custom cache age,
+    // and allows us to easily disable it for JakanUsers if not.
+    private cacheModified = false;
 
     constructor() {
         this.builder = new JakanClientBuilder();
@@ -24,7 +27,8 @@ class Jakan {
     }
 
     private _setCacheAge(cacheAge?: number) {
-        if (cacheAge != null) {
+        if (cacheAge != null && typeof cacheAge === "number") {
+            this.cacheModified = true;
             this.builder.setCacheAge(cacheAge);
         }
     }
@@ -42,6 +46,11 @@ class Jakan {
     // You need to register an ClientID to use this. Please check Jakan README for more info.
     forUsers(): JakanUsers {
         this.builder.setForUsers();
+        // Disable cache is the user has not set a custom cache age.
+        if (!this.cacheModified) {
+            this.builder.setCacheAge(0);
+        }
+
         return this.builder.build<JakanUsers>();
     }
 

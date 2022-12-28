@@ -77,7 +77,6 @@ class JakanClientBuilder implements JakanBuilder {
             instance = new JakanMisc();
         } else if (this.builderTarget === BuilderTargets.users) {
             // Disable cache for the user client.
-            this.cacheAge = 0;
             instance = new JakanUsers();
         } else {
             throw new JakanBuilderError("No build target selected");
