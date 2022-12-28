@@ -10,6 +10,7 @@ import { type } from "os";
 
 class JakanClientBuilder implements JakanBuilder {
     private redisClient: RedisClientType | undefined;
+    // 15 minutes
     private cacheAge: number = 15 * 60 * 1000;
     private forage: unknown | undefined;
     private webStorage: Storage | undefined;
