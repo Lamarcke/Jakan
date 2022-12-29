@@ -28,5 +28,7 @@ jobs:
             - run: npm ci
             # We need to test each client separately to avoid 429 errors.
             - run: npm run test-search
+            - run: sleep 30
             - run: npm run test-misc
+            - run: sleep 30
             - run: npm run test-users
