@@ -1,4 +1,5 @@
 [![Node.JS CI Per-Client](https://github.com/Lamarcke/Jakan/actions/workflows/npm-test.js.yml/badge.svg?branch=main)](https://github.com/Lamarcke/Jakan/actions/workflows/npm-test.js.yml)
+[![npm version](https://badge.fury.io/js/jakan.svg)](https://badge.fury.io/js/jakan)
 
 # Jakan
 
