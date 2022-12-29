@@ -14,7 +14,10 @@
         "prebuild": "rimraf dist",
         "run": "npm build",
         "build": "parcel build",
-        "test": "jest"
+        "test-all": "jest",
+        "test-search": "jest search.test.ts",
+        "test-misc": "jest misc.test.ts",
+        "test-users": "jest users.test.ts"
     },
     "keywords": [
         "jikan",
