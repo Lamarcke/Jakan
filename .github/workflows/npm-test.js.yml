@@ -18,6 +18,7 @@ jobs:
               with:
                   node-version: 16
                   registry-url: https://registry.npmjs.org/
+            - run: npm ci
             - run: npm run test-search
             - run: sleep 30
             - run: npm run test-misc
