@@ -1,3 +1,5 @@
+[![Node.JS CI Per-Client](https://github.com/Lamarcke/Jakan/actions/workflows/npm-test.js.yml/badge.svg?branch=main)](https://github.com/Lamarcke/Jakan/actions/workflows/npm-test.js.yml)
+
 # Jakan
 
 The de-facto wrapper for the Jikan and MyAnimeList API.
