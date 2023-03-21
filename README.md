@@ -9,8 +9,7 @@ The de-facto wrapper for the Jikan and MyAnimeList API.
 
 Jakan is a wrapper on top of Jikan **v4** (a MAL unnoficial API) and the official MAL api.
 
-We plan to leverage Jikan api for most of the requests (searching, schedules, recommendations and etc)
-while using the official API for user-related requests.
+It allows you to programatically send requests to the Jikan API. No API key is needed.
 
 ## Features
 
