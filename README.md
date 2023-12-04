@@ -49,7 +49,7 @@ We include three clients for requests:
 
 `JakanSearch` - Responsible for searching anime, manga, characters and people.  
 `JakanMisc` - Responsible for everything related with miscellaneous data. Includes schedules, recommendations and etc.  
-`JakanUsers` - The client responsible for leveraging MAL. Authenticates, retrieves and changes a user's library.
+`JakanUsers` - Responsible for querying user data via the Jikan users API.
 
 Choosing a client is simple, select a cache provider using `.with'Provider'()` (where `'Provider'` is the provider's name), and then use the respective `.for'Client'()` (where `'Client'` is the client name.) method on
 Jakan.  
