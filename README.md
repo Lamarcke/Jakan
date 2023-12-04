@@ -7,7 +7,7 @@ The de-facto wrapper for the Jikan and MyAnimeList API.
 
 ## What's this?
 
-Jakan is a wrapper on top of Jikan **v4** (a MAL unnoficial API) and the official MAL api.
+Jakan is a wrapper on top of Jikan **v4** (a MAL unnoficial API).
 
 It allows you to programatically send requests to the Jikan API. No API key is needed.
 
@@ -16,17 +16,15 @@ It allows you to programatically send requests to the Jikan API. No API key is n
 What can you expect?
 
 -   All requests are cached by default in a store of your choice.  
-    This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to Jikan/MAL.  
+    This, combined with Jikan's own cache, means you will hardly ever make unnecessary requests to Jikan/MAL. The cache is opt-out and you can disable it very easily.
     `Powered by axios-cache-interceptor`
 
 -   Platform-agnostic:  
     We use Parcel to build the library with support for most browsers and node environments.
     This includes compatibility with CommonJS, and ESM.
-    We are also limiting ourselves to ES5 syntax for maximum compatibility.
 
 -   Typescript first  
-    Typescript is a first citizen here, and almost all request endpoints and their parameters
-    (even the parameters of the parameters) have been mapped, so building queries is a breeze.  
+    Typescript is a first citizen here, and almost all request endpoints and their parameters have been mapped, so building queries is a breeze.  
     Results are also mapped.
 
 -   Javascript available  
@@ -43,33 +41,6 @@ What can you expect?
 or  
 `yarn add jakan`
 
-## Breaking changes on 1.0.0
-
-This is only relevant if you were using this library before `1.0.0`.
-
-Starting from version `1.0`, a small change will happen on how the builder process for the Jakan class is done. The
-change is pretty simple:  
-We will be inverting the order of methods to call in the builder class, the new order is as follow:  
-`choosing cache provider --> choosing media type`  
-instead of:  
-`choosing media type --> choosing cache provider`
-
-The main reason for this change is described in this [issue](https://github.com/Lamarcke/Jakan/issues/2).
-
-When this happens, this README will be updated accordingly, you can be sure that the code present in the quickstart
-guides below are the correct way.
-
-If you have a service built on top of this project, and don't want to update now, you can pin the `0.9` branch from this
-repo. In your `package.json` file:
-
-```json
-"dependencies": {
-    "jakan": "Lamarcke/Jakan#0.9"
-},
-```
-
-This change will only happen when the `1.0` version is out in the `npm` registry.
-
 ## Usage
 
 Jakan uses a builder-pattern approach to building it's clients.  
@@ -80,9 +51,9 @@ We include three clients for requests:
 `JakanMisc` - Responsible for everything related with miscellaneous data. Includes schedules, recommendations and etc.  
 `JakanUsers` - The client responsible for leveraging MAL. Authenticates, retrieves and changes a user's library.
 
-Choosing a client is simple, just use the respective `.for'Client'()` (where `'Client'` is the client name.) method on
+Choosing a client is simple, select a cache provider using `.with'Provider'()` (where `'Provider'` is the provider's name), and then use the respective `.for'Client'()` (where `'Client'` is the client name.) method on
 Jakan.  
-Then, choose a cache provider. You can use a memory cache or the WebStorage API for a quickstart.
+You can use the memory cache or the WebStorage API for a quickstart.
 
 **JakanSearch**
 
@@ -177,21 +148,21 @@ Along with the cache provider, you can also set a custom cache age/TTL.
 
 PS: `cacheAge` should be in milliseconds.
 
+### Disabling cache
+You can opt-out of `axios-cache-interceptor`'s cache by using a `cacheAge` of `0` when creating client classes.  
+Internally, this will make the client use a pure `axios` instance. Without the `axios-cache-interceptor` adapter.
+
+If you are having problems related to `axios-cache-interceptor`, try setting `cacheAge` to `0` and opening an issue in this repo.
+
 ```typescript
 const jakan = new Jakan();
 // cacheAge is available on all clients' with'Provider' methods.
 const clientWithoutCache = jakan.withMemory(5000);
 ```
 
-You can opt-out of `axios-cache-interceptor`'s cache by using a `cacheAge` of `0` when creating client classes.  
-Internally, this will make the client use a pure `axios` instance. Without the `axios-cache-interceptor` adapter.
-
-If you are having problems related to `axios-cache-interceptor`, try setting `cacheAge` to `0` and opening an issue in this repo.
-
 The `JakanUsers` client has cache disabled by default. You can still enable it by setting a custom `cacheAge`.
 
 ## Project status
-
 This library is currently in a finished state, and future updates will be mostly for bug fixes and for breaking Jikan API changes.
 
 Still, we need some help to map the Jikan API responses, since it takes a lot of time and is a very manual process.  
