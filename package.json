@@ -15,9 +15,9 @@
         "run": "npm build",
         "build": "parcel build",
         "test-all": "jest",
-        "test-search": "jest search.test.ts",
-        "test-misc": "jest misc.test.ts",
-        "test-users": "jest users.test.ts"
+        "test-search": "jest search.test.ts --runInBand",
+        "test-misc": "jest misc.test.ts --runInBand",
+        "test-users": "jest users.test.ts --runInBand"
     },
     "keywords": [
         "jikan",

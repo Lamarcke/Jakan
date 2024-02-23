@@ -1,7 +1,13 @@
 import Jakan from "../src";
 import JakanMisc from "../src/clients/misc/misc";
+import { ScheduleRequestQueryFilter } from "../src/clients/misc/miscConstants";
 
 describe("JakanMisc", () => {
+    beforeEach(async () => {
+        // This Avoid overcharge Jikan API
+        await new Promise((r) => setTimeout(r, 1500));
+    });
+
     test("should return a JakanMisc object", () => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
@@ -53,12 +59,23 @@ describe("JakanMisc", () => {
         expect(schedule).toHaveProperty("data");
         expect(schedule.data.length).toBeGreaterThan(0);
     });
-    test("should return schedule based on query", async () => {
+    test.each([
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+    ])(
+        "should return schedule based on query %s",
+        async (scheduleDay: string) => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
         const schedule = await misc.schedules({
-            filter: "monday",
+            filter: scheduleDay as ScheduleRequestQueryFilter,
             page: 1,
+            limit: 1,
         });
         expect(schedule).toHaveProperty("data");
         expect(schedule.data.length).toBeGreaterThan(0);
@@ -103,14 +120,6 @@ describe("JakanMisc", () => {
         expect(seasonList).toHaveProperty("data");
         expect(seasonList.data.length).toBeGreaterThan(0);
     });
-    // reviews endpoints are currently returning a 500 error.
-    // test("should return anime reviews", async () => {
-    //     const jakan = new Jakan();
-    //     const misc = jakan.withMemory().forMisc();
-    //     const reviews = await misc.reviews("anime");
-    //     expect(reviews).toHaveProperty("data");
-    //     expect(reviews.data.length).toBeGreaterThan(0);
-    // });
     test("should return anime genres", async () => {
         const jakan = new Jakan();
         const misc = jakan.withMemory().forMisc();
