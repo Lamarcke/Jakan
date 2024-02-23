@@ -20,6 +20,8 @@ enum ScheduleRequestQueryFilter {
     wednesday = "wednesday",
     thursday = "thursday",
     friday = "friday",
+    saturday = "saturday",
+    sunday = "sunday",
     unknow = "unknow",
     other = "other",
 }
